@@ -1,0 +1,778 @@
+{
+ "san_pham": "Gelsectan",
+ "don_vi": "Chi Bách Pharma",
+ "cap_nhat": "09/10/2026",
+ "nguon": "Bộ câu hỏi cơ bản về Gelsectan — Chi Bách Pharma gửi 30/09/2026",
+ "luu_y_khach": "Nhóm câu hỏi nhập môn / thực hành kê đơn. Mỗi câu trả lời ≤30 giây nói. Các câu về trẻ em, thai kỳ, tương tác thuốc, bảo quản: robot trả lời mức khái quát và mời tham khảo tờ HDSD / chuyển Medical, KHÔNG tự khẳng định ngoài dữ liệu.",
+ "compliance": [
+  "Dùng “hỗ trợ kiểm soát/quản lý triệu chứng”, không “chữa khỏi”.",
+  "Gọi “thiết bị y tế”, không gọi “thuốc”.",
+  "Liều dùng/cách dùng/bảo quản: ưu tiên nhãn và tờ HDSD đã phê duyệt tại Việt Nam khi có khác biệt.",
+  "Câu vượt dữ liệu (trẻ em, thai kỳ, tương tác) → trả lời khái quát và chuyển Medical.",
+  "Claim “trúng thầu nhiều bệnh viện”: chỉ nêu khi có danh sách/quyết định cập nhật; không phóng đại."
+ ],
+ "nhom": [
+  {
+   "ma": "co-che",
+   "ten": "Cơ chế tác động",
+   "phu": "Màng bảo vệ niêm mạc ruột, hấp thu, khác men vi sinh",
+   "so": 4
+  },
+  {
+   "ma": "tong-quan",
+   "ten": "Tổng quan sản phẩm",
+   "phu": "Gelsectan là gì, thành phần, chỉ định, xuất xứ",
+   "so": 6
+  },
+  {
+   "ma": "lieu-dung",
+   "ten": "Liều dùng và cách dùng",
+   "phu": "Liều, thời điểm uống, thời gian điều trị, bảo quản",
+   "so": 6
+  },
+  {
+   "ma": "doi-tuong",
+   "ten": "Đối tượng đặc biệt",
+   "phu": "Trẻ em, thai kỳ, cho con bú, tương tác",
+   "so": 3
+  },
+  {
+   "ma": "an-toan",
+   "ten": "An toàn",
+   "phu": "Tác dụng phụ, dùng lâu dài, táo bón",
+   "so": 3
+  },
+  {
+   "ma": "bang-chung",
+   "ten": "Bằng chứng và lựa chọn",
+   "phu": "Nghiên cứu lâm sàng, so với loperamide, thể bệnh",
+   "so": 3
+  }
+ ],
+ "cau": [
+  {
+   "id": "0.1",
+   "hoi": "Gelsectan là thuốc hay thực phẩm chức năng?",
+   "dap": "Gelsectan không phải thuốc cũng không phải thực phẩm chức năng, mà là thiết bị y tế (medical device). Sản phẩm đạt tác dụng chính bằng cơ chế vật lý tại chỗ – tạo màng bảo vệ trên niêm mạc ruột – chứ không qua cơ chế dược lý toàn thân.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "Gelsectan là gì",
+    "Gelsectan thuộc loại sản phẩm gì",
+    "Gelsectan có phải là thuốc không",
+    "đây là thuốc hay thiết bị y tế",
+    "Gelsectan có phải thực phẩm chức năng không",
+    "sản phẩm này được phân loại là gì",
+    "giới thiệu về Gelsectan"
+   ],
+   "doc": "Gen-séc-tan không phải thuốc cũng không phải thực phẩm chức năng, mà là thiết bị y tế. Sản phẩm đạt tác dụng chính bằng cơ chế vật lý tại chỗ, tạo màng bảo vệ trên niêm mạc ruột, chứ không qua cơ chế dược lý toàn thân.",
+   "hoi_doc": "Gen-séc-tan là thuốc hay thực phẩm chức năng?",
+   "giay": 14.5
+  },
+  {
+   "id": "0.2",
+   "hoi": "Gelsectan chứa thành phần gì?",
+   "dap": "Gelsectan chứa ba thành phần chính: Xyloglucan, protein đậu kết hợp tannin từ chiết xuất hạt nho, và xylo-oligosaccharides. Ba thành phần phối hợp tạo lớp màng bảo vệ và hỗ trợ phục hồi hàng rào niêm mạc ruột.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "thành phần của Gelsectan là gì",
+    "Gelsectan gồm những chất gì",
+    "trong Gelsectan có gì",
+    "hoạt chất của Gelsectan",
+    "công thức của Gelsectan gồm gì",
+    "Gelsectan có xyloglucan không",
+    "một viên có chứa những gì"
+   ],
+   "doc": "Gen-séc-tan chứa ba thành phần chính: Xy-lô-glu-can, prô-tê-in đậu kết hợp ta-nanh từ chiết xuất hạt nho, và xy-lô ô-li-gô-sác-ca-rít. Ba thành phần phối hợp tạo lớp màng bảo vệ và hỗ trợ phục hồi hàng rào niêm mạc ruột.",
+   "hoi_doc": "Gen-séc-tan chứa thành phần gì?",
+   "giay": 14.7
+  },
+  {
+   "id": "0.3",
+   "hoi": "Gelsectan dùng cho bệnh gì?",
+   "dap": "Gelsectan được chỉ định để khôi phục chức năng ruột ở bệnh nhân rối loạn do hội chứng ruột kích thích – liên quan tình trạng quá mẫn của ruột hoặc do dùng một số thuốc – nhằm giảm và ngăn ngừa tiêu chảy mạn hoặc tái phát, chướng bụng, đau bụng, đầy hơi và trung tiện. Bao gồm thể tiêu chảy và thể sau nhiễm trùng.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "chỉ định của Gelsectan",
+    "Gelsectan chỉ định cho bệnh gì",
+    "Gelsectan dùng trong trường hợp nào",
+    "Gelsectan có tác dụng gì",
+    "Gelsectan dùng để làm gì",
+    "công dụng của Gelsectan",
+    "Gelsectan điều trị bệnh gì",
+    "bệnh nhân nào nên dùng Gelsectan",
+    "Gelsectan dùng làm gì"
+   ],
+   "doc": "Gen-séc-tan được chỉ định để khôi phục chức năng ruột ở bệnh nhân rối loạn do hội chứng ruột kích thích, liên quan tình trạng quá mẫn của ruột hoặc do dùng một số thuốc, nhằm giảm và ngăn ngừa tiêu chảy mạn hoặc tái phát, chướng bụng, đau bụng, đầy hơi và trung tiện. Bao gồm thể tiêu chảy và thể sau nhiễm trùng.",
+   "hoi_doc": "Gen-séc-tan dùng cho bệnh gì?",
+   "giay": 20.9
+  },
+  {
+   "id": "0.4",
+   "hoi": "Gelsectan do nước nào sản xuất?",
+   "dap": "Gelsectan được sản xuất tại Ý, bởi nhà máy Biofarma. Chủ sở hữu sản phẩm là Devintec, Thụy Sĩ. Tại Việt Nam, sản phẩm được phân phối độc quyền bởi Chi Bách Pharma.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "Gelsectan sản xuất ở đâu",
+    "xuất xứ của Gelsectan",
+    "Gelsectan của nước nào",
+    "Gelsectan của hãng nào",
+    "nhà sản xuất Gelsectan là ai",
+    "công ty nào phân phối Gelsectan",
+    "Gelsectan nhập khẩu từ đâu"
+   ],
+   "doc": "Gen-séc-tan được sản xuất tại Ý, bởi nhà máy Bi-ô-phác-ma. Chủ sở hữu sản phẩm là Đê-vin-téc, Thụy Sĩ. Tại Việt Nam, sản phẩm được phân phối độc quyền bởi Chi Bách Phác-ma.",
+   "hoi_doc": "Gen-séc-tan do nước nào sản xuất?",
+   "giay": 11.5
+  },
+  {
+   "id": "0.5",
+   "hoi": "Gelsectan có dạng bào chế gì, hộp bao nhiêu viên?",
+   "dap": "Gelsectan ở dạng viên nang, đóng hộp 30 viên nang.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "Gelsectan dạng gì",
+    "Gelsectan là viên hay gói",
+    "một hộp Gelsectan có bao nhiêu viên",
+    "quy cách đóng gói của Gelsectan",
+    "Gelsectan dạng viên nang phải không",
+    "hộp mấy viên"
+   ],
+   "doc": "Gen-séc-tan ở dạng viên nang, đóng hộp ba mươi viên nang.",
+   "hoi_doc": "Gen-séc-tan có dạng bào chế gì, hộp bao nhiêu viên?",
+   "giay": 3.8
+  },
+  {
+   "id": "0.6",
+   "hoi": "Gelsectan hoạt động như thế nào?",
+   "dap": "Gelsectan tạo một lớp màng bám dính phủ trên niêm mạc ruột, hoạt động như một hàng rào cơ học bảo vệ. Lớp màng này giúp phục hồi hàng rào biểu mô, giảm tình trạng tăng tính thấm ruột, qua đó hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích.",
+   "nhom": "co-che",
+   "bien_the": [
+    "cơ chế tác dụng của Gelsectan",
+    "cơ chế của Gelsectan là gì",
+    "Gelsectan tác động như thế nào",
+    "Gelsectan hoạt động ra sao",
+    "Gelsectan tạo màng bảo vệ như thế nào",
+    "nguyên lý hoạt động của Gelsectan"
+   ],
+   "doc": "Gen-séc-tan tạo một lớp màng bám dính phủ trên niêm mạc ruột, hoạt động như một hàng rào cơ học bảo vệ. Lớp màng này giúp phục hồi hàng rào biểu mô, giảm tình trạng tăng tính thấm ruột, qua đó hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích.",
+   "hoi_doc": "Gen-séc-tan hoạt động như thế nào?",
+   "giay": 16.8
+  },
+  {
+   "id": "0.7",
+   "hoi": "“Bảo vệ hàng rào niêm mạc ruột” nghĩa là gì?",
+   "dap": "Niêm mạc ruột bình thường có hàng rào kín giữa các tế bào, ngăn vi khuẩn và kháng nguyên xâm nhập. Khi hàng rào này lỏng lẻo, tính thấm tăng lên, gây vi viêm và tăng nhạy cảm – góp phần gây triệu chứng. Gelsectan phủ một lớp màng bảo vệ, giúp bịt kín và phục hồi hàng rào này.",
+   "nhom": "co-che",
+   "bien_the": [
+    "hàng rào niêm mạc ruột là gì",
+    "bảo vệ hàng rào niêm mạc nghĩa là sao",
+    "tăng tính thấm ruột là gì",
+    "tại sao phải bảo vệ niêm mạc ruột",
+    "hàng rào ruột lỏng lẻo thì sao",
+    "giải thích về hàng rào niêm mạc ruột"
+   ],
+   "doc": "Niêm mạc ruột bình thường có hàng rào kín giữa các tế bào, ngăn vi khuẩn và kháng nguyên xâm nhập. Khi hàng rào này lỏng lẻo, tính thấm tăng lên, gây vi viêm và tăng nhạy cảm, góp phần gây triệu chứng. Gen-séc-tan phủ một lớp màng bảo vệ, giúp bịt kín và phục hồi hàng rào này.",
+   "hoi_doc": "Bảo vệ hàng rào niêm mạc ruột nghĩa là gì?",
+   "giay": 18.5
+  },
+  {
+   "id": "0.8",
+   "hoi": "Gelsectan có hấp thu vào máu không?",
+   "dap": "Không. Nghiên cứu hấp thu trên mô hình biểu mô ruột cho thấy Gelsectan và các thành phần không bị hấp thu qua tế bào ruột vào máu; sản phẩm chỉ tạo lớp màng tại chỗ trên bề mặt niêm mạc. Đây là cơ sở cho hồ sơ an toàn thuận lợi và ít tương tác thuốc.",
+   "nhom": "co-che",
+   "bien_the": [
+    "Gelsectan có hấp thu không",
+    "Gelsectan có vào máu không",
+    "Gelsectan có hấp thu toàn thân không",
+    "Gelsectan có ngấm vào cơ thể không",
+    "sản phẩm có tác dụng toàn thân không",
+    "Gelsectan chỉ tác dụng tại chỗ phải không"
+   ],
+   "doc": "Không. Nghiên cứu hấp thu trên mô hình biểu mô ruột cho thấy Gen-séc-tan và các thành phần không bị hấp thu qua tế bào ruột vào máu; sản phẩm chỉ tạo lớp màng tại chỗ trên bề mặt niêm mạc. Đây là cơ sở cho hồ sơ an toàn thuận lợi và ít tương tác thuốc.",
+   "hoi_doc": "Gen-séc-tan có hấp thu vào máu không?",
+   "giay": 16.8
+  },
+  {
+   "id": "0.9",
+   "hoi": "Gelsectan khác gì so với men vi sinh (probiotic)?",
+   "dap": "Men vi sinh bổ sung lợi khuẩn, hiệu quả thay đổi theo chủng. Gelsectan tạo màng bảo vệ vật lý giúp phục hồi hàng rào niêm mạc, đồng thời thành phần xylo-oligosaccharides là prebiotic hỗ trợ hệ vi sinh. Hai nhóm có cơ chế khác nhau và có thể bổ sung cho nhau.",
+   "nhom": "co-che",
+   "bien_the": [
+    "Gelsectan khác probiotic thế nào",
+    "so sánh Gelsectan với men vi sinh",
+    "Gelsectan có phải men vi sinh không",
+    "Gelsectan và men tiêu hóa khác nhau thế nào",
+    "dùng chung với men vi sinh được không",
+    "Gelsectan có lợi khuẩn không"
+   ],
+   "doc": "Men vi sinh bổ sung lợi khuẩn, hiệu quả thay đổi theo chủng. Gen-séc-tan tạo màng bảo vệ vật lý giúp phục hồi hàng rào niêm mạc, đồng thời thành phần xy-lô ô-li-gô-sác-ca-rít là pờ-ri-bai-ô-tíc hỗ trợ hệ vi sinh. Hai nhóm có cơ chế khác nhau và có thể bổ sung cho nhau.",
+   "hoi_doc": "Gen-séc-tan khác gì so với men vi sinh ?",
+   "giay": 17.9
+  },
+  {
+   "id": "0.10",
+   "hoi": "Liều dùng Gelsectan như thế nào?",
+   "dap": "Theo tờ thông tin sản phẩm, dùng 1 đến 2 viên nang vào buổi sáng và buổi tối, trong 2 đến 4 tuần. Trong các nghiên cứu, phác đồ thường dùng là liều tấn công 2 viên × 2 lần mỗi ngày, sau đó duy trì 1 viên × 2 lần mỗi ngày. Bác sĩ điều chỉnh theo đáp ứng của bệnh nhân.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "liều dùng Gelsectan",
+    "Gelsectan uống mấy viên một ngày",
+    "mỗi ngày uống bao nhiêu viên",
+    "cách dùng Gelsectan",
+    "Gelsectan uống thế nào",
+    "liều tấn công và liều duy trì là bao nhiêu",
+    "ngày uống mấy lần",
+    "một lần uống mấy viên"
+   ],
+   "doc": "Theo tờ thông tin sản phẩm, dùng một đến hai viên nang vào buổi sáng và buổi tối, trong hai đến bốn tuần. Trong các nghiên cứu, phác đồ thường dùng là liều tấn công hai viên, hai lần mỗi ngày, sau đó duy trì một viên, hai lần mỗi ngày. Bác sĩ điều chỉnh theo đáp ứng của bệnh nhân.",
+   "hoi_doc": "Liều dùng Gen-séc-tan như thế nào?",
+   "giay": 18.7
+  },
+  {
+   "id": "0.11",
+   "hoi": "Nên uống trước hay sau ăn?",
+   "dap": "Gelsectan thường được uống trước bữa ăn, vào buổi sáng và buổi tối. Chi tiết xin theo tờ hướng dẫn sử dụng chính thức.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "Gelsectan uống trước hay sau ăn",
+    "uống lúc đói hay lúc no",
+    "uống Gelsectan vào lúc nào",
+    "thời điểm uống Gelsectan",
+    "uống trước bữa ăn hay sau bữa ăn",
+    "nên uống buổi sáng hay buổi tối"
+   ],
+   "doc": "Gen-séc-tan thường được uống trước bữa ăn, vào buổi sáng và buổi tối. Chi tiết xin theo tờ hướng dẫn sử dụng chính thức.",
+   "hoi_doc": "Nên uống trước hay sau ăn?",
+   "giay": 8.0
+  },
+  {
+   "id": "0.12",
+   "hoi": "Một đợt điều trị kéo dài bao lâu?",
+   "dap": "Một đợt thường kéo dài 2 đến 4 tuần. Tùy đáp ứng, bác sĩ có thể dùng liều tấn công rồi chuyển sang liều duy trì. Nghiên cứu dài hạn theo dõi tới 6 tháng cho thấy hiệu quả được duy trì và an toàn.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "dùng Gelsectan trong bao lâu",
+    "một liệu trình Gelsectan bao lâu",
+    "uống Gelsectan mấy tuần",
+    "thời gian điều trị là bao lâu",
+    "liệu trình kéo dài mấy tuần",
+    "phải uống bao nhiêu ngày"
+   ],
+   "doc": "Một đợt thường kéo dài hai đến bốn tuần. Tùy đáp ứng, bác sĩ có thể dùng liều tấn công rồi chuyển sang liều duy trì. Nghiên cứu dài hạn theo dõi tới sáu tháng cho thấy hiệu quả được duy trì và an toàn.",
+   "hoi_doc": "Một đợt điều trị kéo dài bao lâu?",
+   "giay": 13.4
+  },
+  {
+   "id": "0.13",
+   "hoi": "Bao lâu thì bệnh nhân thấy hiệu quả?",
+   "dap": "Cải thiện thường thấy rõ ngay từ tháng đầu điều trị. Trong nghiên cứu dài hạn, các điểm triệu chứng giảm có ý nghĩa ngay sau 1 tháng và duy trì bền vững. Một số bệnh nhân thấy cải thiện cảm giác mót rặn và số lần đi tiêu trong những tuần đầu.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "bao lâu thì Gelsectan có tác dụng",
+    "sau bao lâu thấy hiệu quả",
+    "uống bao lâu thì đỡ",
+    "khi nào thấy cải thiện triệu chứng",
+    "Gelsectan có hiệu quả nhanh không",
+    "mất bao lâu để có kết quả"
+   ],
+   "doc": "Cải thiện thường thấy rõ ngay từ tháng đầu điều trị. Trong nghiên cứu dài hạn, các điểm triệu chứng giảm có ý nghĩa ngay sau một tháng và duy trì bền vững. Một số bệnh nhân thấy cải thiện cảm giác mót rặn và số lần đi tiêu trong những tuần đầu.",
+   "hoi_doc": "Bao lâu thì bệnh nhân thấy hiệu quả?",
+   "giay": 16.3
+  },
+  {
+   "id": "0.14",
+   "hoi": "Có cần duy trì sau khi hết triệu chứng không?",
+   "dap": "Tùy từng bệnh nhân. Một số trường hợp giảm liều dần sau khi triệu chứng cải thiện; cũng có trường hợp triệu chứng tái phát nhẹ sau khi ngưng và cần dùng lại. Bác sĩ quyết định phác đồ duy trì phù hợp với từng người.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "hết triệu chứng có cần uống tiếp không",
+    "có cần dùng duy trì không",
+    "khi đỡ rồi có ngưng được không",
+    "ngưng Gelsectan có tái phát không",
+    "có phải uống duy trì lâu dài không",
+    "hết triệu chứng thì dừng được chưa"
+   ],
+   "doc": "Tùy từng bệnh nhân. Một số trường hợp giảm liều dần sau khi triệu chứng cải thiện; cũng có trường hợp triệu chứng tái phát nhẹ sau khi ngưng và cần dùng lại. Bác sĩ quyết định phác đồ duy trì phù hợp với từng người.",
+   "hoi_doc": "Có cần duy trì sau khi hết triệu chứng không?",
+   "giay": 14.3
+  },
+  {
+   "id": "0.15",
+   "hoi": "Gelsectan có dùng được cho trẻ em không?",
+   "dap": "Dữ liệu lâm sàng của Gelsectan trên chỉ định hội chứng ruột kích thích tập trung ở người trưởng thành. Về việc dùng cho trẻ em, em mời Bác sĩ tham khảo tờ thông tin sản phẩm hoặc trao đổi với chuyên viên Medical để được tư vấn chính xác ạ.",
+   "nhom": "doi-tuong",
+   "bien_the": [
+    "trẻ em dùng Gelsectan được không",
+    "Gelsectan cho trẻ nhỏ được không",
+    "bé mấy tuổi thì dùng được",
+    "dùng cho bệnh nhi được không",
+    "Gelsectan có dùng cho trẻ con không",
+    "trẻ dưới mười hai tuổi uống được không"
+   ],
+   "doc": "Dữ liệu lâm sàng của Gen-séc-tan trên chỉ định hội chứng ruột kích thích tập trung ở người trưởng thành. Về việc dùng cho trẻ em, em mời Bác sĩ tham khảo tờ thông tin sản phẩm hoặc trao đổi với chuyên viên Mê-đi-cồ để được tư vấn chính xác ạ.",
+   "hoi_doc": "Gen-séc-tan có dùng được cho trẻ em không?",
+   "giay": 16.1
+  },
+  {
+   "id": "0.16",
+   "hoi": "Phụ nữ có thai hoặc cho con bú dùng được không?",
+   "dap": "Về sử dụng cho phụ nữ có thai hoặc cho con bú, em chưa có đủ dữ liệu để khẳng định. Em xin mời Bác sĩ tham khảo tờ hướng dẫn sử dụng hoặc kết nối với chuyên viên Medical để được tư vấn ạ.",
+   "nhom": "doi-tuong",
+   "bien_the": [
+    "bà bầu dùng Gelsectan được không",
+    "phụ nữ mang thai uống được không",
+    "đang cho con bú có dùng được không",
+    "có thai dùng Gelsectan có sao không",
+    "mẹ bầu uống được không",
+    "thai phụ dùng được không"
+   ],
+   "doc": "Về sử dụng cho phụ nữ có thai hoặc cho con bú, em chưa có đủ dữ liệu để khẳng định. Em xin mời Bác sĩ tham khảo tờ hướng dẫn sử dụng hoặc kết nối với chuyên viên Mê-đi-cồ để được tư vấn ạ.",
+   "hoi_doc": "Phụ nữ có thai hoặc cho con bú dùng được không?",
+   "giay": 12.5
+  },
+  {
+   "id": "0.17",
+   "hoi": "Gelsectan có tương tác với thuốc khác không?",
+   "dap": "Do Gelsectan không hấp thu vào máu mà chỉ tác động tại chỗ trên niêm mạc, nguy cơ tương tác toàn thân thấp. Tuy nhiên, để chắc chắn về việc dùng đồng thời với thuốc khác, em mời Bác sĩ tham khảo tờ hướng dẫn sử dụng chính thức ạ.",
+   "nhom": "doi-tuong",
+   "bien_the": [
+    "Gelsectan có tương tác thuốc không",
+    "uống chung với thuốc khác được không",
+    "dùng cùng thuốc khác có sao không",
+    "Gelsectan có ảnh hưởng thuốc khác không",
+    "dùng đồng thời với kháng sinh được không",
+    "có cần uống cách xa thuốc khác không"
+   ],
+   "doc": "Do Gen-séc-tan không hấp thu vào máu mà chỉ tác động tại chỗ trên niêm mạc, nguy cơ tương tác toàn thân thấp. Tuy nhiên, để chắc chắn về việc dùng đồng thời với thuốc khác, em mời Bác sĩ tham khảo tờ hướng dẫn sử dụng chính thức ạ.",
+   "hoi_doc": "Gen-séc-tan có tương tác với thuốc khác không?",
+   "giay": 15.4
+  },
+  {
+   "id": "0.18",
+   "hoi": "Bảo quản Gelsectan thế nào?",
+   "dap": "Bảo quản nơi khô ráo, theo điều kiện ghi trên bao bì sản phẩm. Chi tiết về nhiệt độ và hạn dùng xin theo nhãn và tờ hướng dẫn sử dụng chính thức.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "bảo quản Gelsectan như thế nào",
+    "Gelsectan bảo quản ở nhiệt độ nào",
+    "cách bảo quản sản phẩm",
+    "có cần để tủ lạnh không",
+    "hạn dùng của Gelsectan",
+    "hạn sử dụng bao lâu",
+    "điều kiện bảo quản của Gelsectan"
+   ],
+   "doc": "Bảo quản nơi khô ráo, theo điều kiện ghi trên bao bì sản phẩm. Chi tiết về nhiệt độ và hạn dùng xin theo nhãn và tờ hướng dẫn sử dụng chính thức.",
+   "hoi_doc": "Bảo quản Gen-séc-tan thế nào?",
+   "giay": 9.7
+  },
+  {
+   "id": "0.19",
+   "hoi": "Gelsectan có tác dụng phụ gì không?",
+   "dap": "Trong các nghiên cứu, tác dụng phụ chủ yếu nhẹ và phần lớn không liên quan điều trị, không có biến cố nghiêm trọng. Tác dụng phụ đáng kể được ghi nhận là táo bón ở một số ít bệnh nhân trong tháng đầu. Hồ sơ an toàn nhìn chung thuận lợi.",
+   "nhom": "an-toan",
+   "bien_the": [
+    "tác dụng phụ của Gelsectan",
+    "Gelsectan có tác dụng không mong muốn gì",
+    "uống Gelsectan có bị gì không",
+    "Gelsectan có an toàn không",
+    "tác dụng ngoại ý của Gelsectan",
+    "có phản ứng phụ không",
+    "có tác dụng phát sinh nào không"
+   ],
+   "doc": "Trong các nghiên cứu, tác dụng phụ chủ yếu nhẹ và phần lớn không liên quan điều trị, không có biến cố nghiêm trọng. Tác dụng phụ đáng kể được ghi nhận là táo bón ở một số ít bệnh nhân trong tháng đầu. Hồ sơ an toàn nhìn chung thuận lợi.",
+   "hoi_doc": "Gen-séc-tan có tác dụng phụ gì không?",
+   "giay": 15.7
+  },
+  {
+   "id": "0.20",
+   "hoi": "Dùng lâu dài có an toàn không?",
+   "dap": "Nghiên cứu quan sát dài hạn theo dõi tới 6 tháng cho thấy Gelsectan an toàn, tác dụng phụ nhẹ và phần lớn không liên quan điều trị, không có biến cố nghiêm trọng. Việc không hấp thu toàn thân cũng góp phần vào hồ sơ an toàn này.",
+   "nhom": "an-toan",
+   "bien_the": [
+    "dùng Gelsectan lâu dài có sao không",
+    "uống lâu dài có an toàn không",
+    "dùng kéo dài có hại không",
+    "uống nhiều tháng có ảnh hưởng gì không",
+    "dùng dài hạn được không",
+    "sử dụng sáu tháng có an toàn không",
+    "sử dụng lâu dài có an toàn không"
+   ],
+   "doc": "Nghiên cứu quan sát dài hạn theo dõi tới sáu tháng cho thấy Gen-séc-tan an toàn, tác dụng phụ nhẹ và phần lớn không liên quan điều trị, không có biến cố nghiêm trọng. Việc không hấp thu toàn thân cũng góp phần vào hồ sơ an toàn này.",
+   "hoi_doc": "Dùng lâu dài có an toàn không?",
+   "giay": 15.5
+  },
+  {
+   "id": "0.21",
+   "hoi": "Gelsectan có gây táo bón khi cầm tiêu chảy không?",
+   "dap": "Gelsectan giảm tiêu chảy theo cơ chế êm dịu – phục hồi hàng rào niêm mạc và làm lành biểu mô – giúp bình thường hóa phân thay vì ép chậm nhu động. Nhờ vậy ít nguy cơ chuyển pha táo bón hơn so với thuốc cầm tiêu chảy tác động trực tiếp lên vận động ruột.",
+   "nhom": "an-toan",
+   "bien_the": [
+    "Gelsectan có gây táo bón không",
+    "uống Gelsectan có bị táo bón không",
+    "cầm tiêu chảy xong có bị táo không",
+    "có bị chuyển sang táo bón không",
+    "Gelsectan có làm chậm nhu động ruột không"
+   ],
+   "doc": "Gen-séc-tan giảm tiêu chảy theo cơ chế êm dịu, phục hồi hàng rào niêm mạc và làm lành biểu mô, giúp bình thường hóa phân thay vì ép chậm nhu động. Nhờ vậy ít nguy cơ chuyển pha táo bón hơn so với thuốc cầm tiêu chảy tác động trực tiếp lên vận động ruột.",
+   "hoi_doc": "Gen-séc-tan có gây táo bón khi cầm tiêu chảy không?",
+   "giay": 16.9
+  },
+  {
+   "id": "0.22",
+   "hoi": "Gelsectan có nghiên cứu lâm sàng chứng minh không?",
+   "dap": "Có. Gelsectan có thử nghiệm lâm sàng ngẫu nhiên mù đôi bắt chéo đối chứng giả dược (Trifan 2019), nghiên cứu dài hạn 6 tháng (de los Rios 2021), và nghiên cứu trên thể sau nhiễm trùng (Viazis 2025). Sản phẩm cũng được ghi nhận trong hướng dẫn điều trị của nhiều nước châu Âu.",
+   "nhom": "bang-chung",
+   "bien_the": [
+    "Gelsectan có nghiên cứu lâm sàng không",
+    "bằng chứng lâm sàng của Gelsectan",
+    "có thử nghiệm lâm sàng nào chứng minh",
+    "Gelsectan có bằng chứng khoa học không",
+    "có dữ liệu nghiên cứu nào",
+    "nghiên cứu nào chứng minh hiệu quả",
+    "có trong hướng dẫn điều trị không"
+   ],
+   "doc": "Có. Gen-séc-tan có thử nghiệm lâm sàng ngẫu nhiên mù đôi bắt chéo đối chứng giả dược của tác giả Tri-phan, năm hai nghìn không trăm mười chín, nghiên cứu dài hạn sáu tháng của tác giả Đê lốt Ri-ốt, năm hai nghìn không trăm hai mươi mốt, và nghiên cứu trên thể sau nhiễm trùng của tác giả Vi-a-dít, năm hai nghìn không trăm hai mươi lăm. Sản phẩm cũng được ghi nhận trong hướng dẫn điều trị của nhiều nước châu Âu.",
+   "hoi_doc": "Gen-séc-tan có nghiên cứu lâm sàng chứng minh không?",
+   "giay": 27.5
+  },
+  {
+   "id": "0.23",
+   "hoi": "Vì sao nên chọn Gelsectan thay vì loperamide?",
+   "dap": "Loperamide cầm tiêu chảy bằng cách làm chậm nhu động, dễ gây chuyển pha sang táo bón. Gelsectan tác động vào cơ chế nền – rối loạn hàng rào và tăng tính thấm niêm mạc – giúp giảm tiêu chảy êm dịu nhờ phục hồi và làm lành niêm mạc. Hai cơ chế có thể bổ sung nhau.",
+   "nhom": "bang-chung",
+   "bien_the": [
+    "Gelsectan khác gì loperamide",
+    "so sánh Gelsectan với loperamide",
+    "tại sao dùng Gelsectan mà không dùng loperamide",
+    "Gelsectan có gì hơn thuốc cầm tiêu chảy",
+    "ưu điểm so với loperamide",
+    "dùng chung với loperamide được không",
+    "Gelsectan hơn loperamide ở điểm nào"
+   ],
+   "doc": "Lô-pê-ra-mít cầm tiêu chảy bằng cách làm chậm nhu động, dễ gây chuyển pha sang táo bón. Gen-séc-tan tác động vào cơ chế nền, rối loạn hàng rào và tăng tính thấm niêm mạc, giúp giảm tiêu chảy êm dịu nhờ phục hồi và làm lành niêm mạc. Hai cơ chế có thể bổ sung nhau.",
+   "hoi_doc": "Vì sao nên chọn Gen-séc-tan thay vì lô-pê-ra-mít?",
+   "giay": 17.6
+  },
+  {
+   "id": "0.24",
+   "hoi": "Gelsectan dùng cho hội chứng ruột kích thích thể tiêu chảy và thể sau nhiễm trùng đúng không?",
+   "dap": "Đúng ạ. Gelsectan là lựa chọn cho cả hội chứng ruột kích thích thể tiêu chảy và hội chứng ruột kích thích sau nhiễm trùng – hai thể có tỷ lệ rối loạn hàng rào và tăng tính thấm niêm mạc cao nhất, đúng cơ chế mà Gelsectan tác động.",
+   "nhom": "bang-chung",
+   "bien_the": [
+    "Gelsectan dùng cho thể tiêu chảy phải không",
+    "hội chứng ruột kích thích sau nhiễm trùng dùng được không",
+    "Gelsectan dùng cho thể nào của hội chứng ruột kích thích",
+    "ruột kích thích thể tiêu chảy có dùng được không",
+    "thể sau nhiễm trùng dùng Gelsectan được không"
+   ],
+   "doc": "Đúng ạ. Gen-séc-tan là lựa chọn cho cả hội chứng ruột kích thích thể tiêu chảy và hội chứng ruột kích thích sau nhiễm trùng, hai thể có tỷ lệ rối loạn hàng rào và tăng tính thấm niêm mạc cao nhất, đúng cơ chế mà Gen-séc-tan tác động.",
+   "hoi_doc": "Gen-séc-tan dùng cho hội chứng ruột kích thích thể tiêu chảy và thể sau nhiễm trùng đúng không?",
+   "giay": 15.5
+  },
+  {
+   "id": "0.25",
+   "hoi": "Gelsectan đã có tại Việt Nam chưa?",
+   "dap": "Gelsectan đã có mặt tại Việt Nam, do Chi Bách Pharma phân phối độc quyền, và hiện đã trúng thầu tại nhiều bệnh viện trong nhóm thiết bị y tế. Kính mời Bác sĩ ghé quầy Chi Bách Pharma để biết thêm thông tin chi tiết ạ.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "Gelsectan có ở Việt Nam chưa",
+    "ở Việt Nam đã có Gelsectan chưa",
+    "Gelsectan đã về Việt Nam chưa",
+    "bệnh viện nào có Gelsectan",
+    "Gelsectan đã trúng thầu chưa",
+    "sản phẩm có trong bệnh viện chưa"
+   ],
+   "doc": "Gen-séc-tan đã có mặt tại Việt Nam, do Chi Bách Phác-ma phân phối độc quyền, và hiện đã trúng thầu tại nhiều bệnh viện trong nhóm thiết bị y tế. Kính mời Bác sĩ ghé quầy Chi Bách Phác-ma để biết thêm thông tin chi tiết ạ.",
+   "hoi_doc": "Gen-séc-tan đã có tại Việt Nam chưa?",
+   "giay": 14.7
+  }
+ ],
+ "cau_mau": [
+  "0.1",
+  "0.3",
+  "0.6",
+  "0.10",
+  "0.19",
+  "0.22",
+  "0.9",
+  "0.13",
+  "0.25"
+ ],
+ "loi": {
+  "chao": {
+   "hien": "Xin chào anh chị! Em là robot của Chi Bách Pharma. Anh chị muốn tìm hiểu về Gelsectan, mời chạm vào một mục trên màn hình ạ.",
+   "doc": "Xin chào anh chị! Em là robot của Chi Bách Phác-ma. Anh chị muốn tìm hiểu về Gen-séc-tan, mời chạm vào một mục trên màn hình ạ."
+  },
+  "chao_tra_cuu": {
+   "hien": "Mời anh chị chạm vào câu hỏi mình quan tâm, em sẽ đọc phần giải đáp ạ.",
+   "doc": "Mời anh chị chạm vào câu hỏi mình quan tâm, em sẽ đọc phần giải đáp ạ."
+  },
+  "chao_ai_mic": {
+   "hien": "Anh chị muốn hỏi gì về Gelsectan, bấm nút micro bên dưới rồi nói với em ạ.",
+   "doc": "Anh chị muốn hỏi gì về Gen-séc-tan, bấm nút micro bên dưới rồi nói với em ạ."
+  },
+  "chao_ai_cham": {
+   "hien": "Anh chị chạm vào một câu hỏi bên dưới để hỏi em ạ.",
+   "doc": "Anh chị chạm vào một câu hỏi bên dưới để hỏi em ạ."
+  },
+  "moi_de_lai": {
+   "hien": "Nếu anh chị muốn tìm hiểu thêm về sản phẩm, vui lòng để lại thông tin để bên em tư vấn chi tiết hơn.",
+   "doc": "Nếu anh chị muốn tìm hiểu thêm về sản phẩm, vui lòng để lại thông tin để bên em tư vấn chi tiết hơn."
+  },
+  "form_mo": {
+   "hien": "Nếu anh chị muốn tìm hiểu thêm về sản phẩm, vui lòng để lại thông tin để bên em tư vấn chi tiết hơn.",
+   "doc": "Nếu anh chị muốn tìm hiểu thêm về sản phẩm, vui lòng để lại thông tin để bên em tư vấn chi tiết hơn."
+  },
+  "form_loi": {
+   "hien": "Anh chị kiểm tra lại giúp em ô được đánh dấu ạ.",
+   "doc": "Anh chị kiểm tra lại giúp em ô được đánh dấu ạ."
+  },
+  "cam_on": {
+   "hien": "Em cảm ơn anh chị. Chi Bách Pharma sẽ liên hệ để tư vấn chi tiết hơn ạ.",
+   "doc": "Em cảm ơn anh chị. Chi Bách Phác-ma sẽ liên hệ để tư vấn chi tiết hơn ạ."
+  },
+  "chua_luu": {
+   "hien": "Em chưa lưu được thông tin. Nhờ anh chị báo nhân viên tại quầy giúp em ạ.",
+   "doc": "Em chưa lưu được thông tin. Nhờ anh chị báo nhân viên tại quầy giúp em ạ."
+  },
+  "khan_cap": {
+   "hien": "Có người cần giúp gấp. Nhờ mọi người hỗ trợ ngay. Nếu cần cấp cứu, xin gọi số một một năm. Em là robot, em không sơ cứu được.",
+   "doc": "Có người cần giúp gấp. Nhờ mọi người hỗ trợ ngay. Nếu cần cấp cứu, xin gọi số một một năm. Em là robot, em không sơ cứu được."
+  },
+  "ca_nhan": {
+   "hien": "Em là robot giới thiệu thông tin sản phẩm nên không tư vấn điều trị cho trường hợp cụ thể được ạ. Anh chị vui lòng hỏi ý kiến bác sĩ điều trị, hoặc trao đổi với chuyên viên Medical tại quầy Chi Bách Pharma ạ.",
+   "doc": "Em là robot giới thiệu thông tin sản phẩm nên không tư vấn điều trị cho trường hợp cụ thể được ạ. Anh chị vui lòng hỏi ý kiến bác sĩ điều trị, hoặc trao đổi với chuyên viên Mê-đi-cồ tại quầy Chi Bách Phác-ma ạ."
+  },
+  "gia": {
+   "hien": "Em chưa có thông tin về giá và điểm bán ạ. Kính mời anh chị ghé quầy Chi Bách Pharma, hoặc để lại thông tin để được tư vấn chi tiết hơn.",
+   "doc": "Em chưa có thông tin về giá và điểm bán ạ. Kính mời anh chị ghé quầy Chi Bách Phác-ma, hoặc để lại thông tin để được tư vấn chi tiết hơn."
+  },
+  "chua_khoi": {
+   "hien": "Gelsectan là thiết bị y tế, hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích. Chi tiết xin mời anh chị tham khảo tờ hướng dẫn sử dụng, hoặc trao đổi với chuyên viên Medical ạ.",
+   "doc": "Gen-séc-tan là thiết bị y tế, hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích. Chi tiết xin mời anh chị tham khảo tờ hướng dẫn sử dụng, hoặc trao đổi với chuyên viên Mê-đi-cồ ạ."
+  },
+  "chinh_tri": {
+   "hien": "Câu này nằm ngoài phạm vi của em ạ. Em chỉ giới thiệu thông tin về Gelsectan thôi.",
+   "doc": "Câu này nằm ngoài phạm vi của em ạ. Em chỉ giới thiệu thông tin về Gen-séc-tan thôi."
+  },
+  "chua_co": {
+   "hien": "Nội dung này em chưa có trong dữ liệu nên không dám trả lời ạ. Kính mời anh chị trao đổi với chuyên viên Medical tại quầy Chi Bách Pharma, hoặc để lại thông tin để được tư vấn chi tiết hơn.",
+   "doc": "Nội dung này em chưa có trong dữ liệu nên không dám trả lời ạ. Kính mời anh chị trao đổi với chuyên viên Mê-đi-cồ tại quầy Chi Bách Phác-ma, hoặc để lại thông tin để được tư vấn chi tiết hơn."
+  },
+  "goi_y": {
+   "hien": "Em chưa chắc mình hiểu đúng câu hỏi. Anh chị chạm vào câu gần nhất với ý mình trên màn hình giúp em ạ.",
+   "doc": "Em chưa chắc mình hiểu đúng câu hỏi. Anh chị chạm vào câu gần nhất với ý mình trên màn hình giúp em ạ."
+  },
+  "xg_chao": {
+   "hien": "Em chào anh chị ạ! Em là robot của Chi Bách Pharma. Anh chị muốn biết gì về Gelsectan cứ hỏi em nhé.",
+   "doc": "Em chào anh chị ạ! Em là robot của Chi Bách Phác-ma. Anh chị muốn biết gì về Gen-séc-tan cứ hỏi em nhé."
+  },
+  "xg_ten": {
+   "hien": "Em là robot của Chi Bách Pharma, em giới thiệu thông tin về Gelsectan ạ.",
+   "doc": "Em là robot của Chi Bách Phác-ma, em giới thiệu thông tin về Gen-séc-tan ạ."
+  },
+  "xg_cam_on": {
+   "hien": "Dạ không có gì ạ. Anh chị cần hỏi thêm gì về Gelsectan cứ hỏi em nhé.",
+   "doc": "Dạ không có gì ạ. Anh chị cần hỏi thêm gì về Gen-séc-tan cứ hỏi em nhé."
+  },
+  "xg_tam_biet": {
+   "hien": "Em chào anh chị. Chúc anh chị một ngày tốt lành ạ.",
+   "doc": "Em chào anh chị. Chúc anh chị một ngày tốt lành ạ."
+  },
+  "dh_bat_dau": {
+   "hien": "Em bắt đầu đi một vòng ạ. Anh chị cần xem thông tin, cứ chạm vào màn hình của em nhé.",
+   "doc": "Em bắt đầu đi một vòng ạ. Anh chị cần xem thông tin, cứ chạm vào màn hình của em nhé."
+  },
+  "lt_bat_dau": {
+   "hien": "Em về vị trí lễ tân ạ.",
+   "doc": "Em về vị trí lễ tân ạ."
+  },
+  "khong_di_duoc": {
+   "hien": "Em chưa tự di chuyển được. Nhờ nhân viên kỹ thuật kiểm tra giúp em ạ.",
+   "doc": "Em chưa tự di chuyển được. Nhờ nhân viên kỹ thuật kiểm tra giúp em ạ."
+  },
+  "cam_on_nhay": {
+   "hien": "Em cảm ơn anh chị đã xem em nhảy ạ! Anh chị muốn tìm hiểu về Gelsectan, cứ chạm vào màn hình nhé.",
+   "doc": "Em cảm ơn anh chị đã xem em nhảy ạ! Anh chị muốn tìm hiểu về Gen-séc-tan, cứ chạm vào màn hình nhé."
+  }
+ },
+ "du_hanh": {
+  "diem": [
+   "Diem 1",
+   "Diem 2",
+   "Diem 3",
+   "Diem 4",
+   "Diem 5"
+  ],
+  "nghi_giay": 22,
+  "cau": [
+   {
+    "hien": "Xin chào quý vị! Em là robot của Chi Bách Pharma. Mời quý vị chạm vào màn hình để tìm hiểu về Gelsectan ạ.",
+    "doc": "Xin chào quý vị! Em là robot của Chi Bách Phác-ma. Mời quý vị chạm vào màn hình để tìm hiểu về Gen-séc-tan ạ."
+   },
+   {
+    "hien": "Gelsectan là thiết bị y tế, tạo lớp màng bảo vệ trên niêm mạc ruột. Mời anh chị chạm vào màn hình để xem thông tin ạ.",
+    "doc": "Gen-séc-tan là thiết bị y tế, tạo lớp màng bảo vệ trên niêm mạc ruột. Mời anh chị chạm vào màn hình để xem thông tin ạ."
+   },
+   {
+    "hien": "Gelsectan hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích. Anh chị muốn biết thêm, cứ chạm vào màn hình của em nhé.",
+    "doc": "Gen-séc-tan hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích. Anh chị muốn biết thêm, cứ chạm vào màn hình của em nhé."
+   },
+   {
+    "hien": "Gelsectan được sản xuất tại Ý, do Chi Bách Pharma phân phối độc quyền tại Việt Nam. Mời anh chị chạm vào màn hình để tìm hiểu ạ.",
+    "doc": "Gen-séc-tan được sản xuất tại Ý, do Chi Bách Phác-ma phân phối độc quyền tại Việt Nam. Mời anh chị chạm vào màn hình để tìm hiểu ạ."
+   },
+   {
+    "hien": "Anh chị có câu hỏi về Gelsectan? Chạm vào màn hình, em sẽ giải đáp ngay ạ.",
+    "doc": "Anh chị có câu hỏi về Gen-séc-tan? Chạm vào màn hình, em sẽ giải đáp ngay ạ."
+   },
+   {
+    "hien": "Kính mời quý vị ghé quầy Chi Bách Pharma để biết thêm thông tin chi tiết về Gelsectan ạ.",
+    "doc": "Kính mời quý vị ghé quầy Chi Bách Phác-ma để biết thêm thông tin chi tiết về Gen-séc-tan ạ."
+   }
+  ]
+ },
+ "le_tan": {
+  "diem": "Le tan",
+  "nghi_giay": 25,
+  "cau": [
+   {
+    "hien": "Xin chào quý vị! Em là robot của Chi Bách Pharma. Mời quý vị chạm vào màn hình để tìm hiểu về Gelsectan ạ.",
+    "doc": "Xin chào quý vị! Em là robot của Chi Bách Phác-ma. Mời quý vị chạm vào màn hình để tìm hiểu về Gen-séc-tan ạ."
+   },
+   {
+    "hien": "Anh chị có câu hỏi về Gelsectan? Mời chạm vào màn hình, em sẽ giải đáp ạ.",
+    "doc": "Anh chị có câu hỏi về Gen-séc-tan? Mời chạm vào màn hình, em sẽ giải đáp ạ."
+   },
+   {
+    "hien": "Gelsectan là thiết bị y tế, tạo lớp màng bảo vệ trên niêm mạc ruột. Mời anh chị chạm vào màn hình để xem thông tin ạ.",
+    "doc": "Gen-séc-tan là thiết bị y tế, tạo lớp màng bảo vệ trên niêm mạc ruột. Mời anh chị chạm vào màn hình để xem thông tin ạ."
+   },
+   {
+    "hien": "Mời anh chị chạm vào màn hình để trò chuyện với em về Gelsectan ạ.",
+    "doc": "Mời anh chị chạm vào màn hình để trò chuyện với em về Gen-séc-tan ạ."
+   }
+  ]
+ },
+ "form": [
+  {
+   "ma": "ten",
+   "nhan": "Họ và tên",
+   "bat": true,
+   "kieu": "chu",
+   "hoa": true,
+   "goi": "Ví dụ: Nguyễn Văn An"
+  },
+  {
+   "ma": "sdt",
+   "nhan": "Số điện thoại",
+   "bat": true,
+   "kieu": "so",
+   "hoa": false,
+   "goi": "Ví dụ: 0912 345 678"
+  },
+  {
+   "ma": "chuc_vu",
+   "nhan": "Chức vụ",
+   "bat": false,
+   "kieu": "chu",
+   "hoa": "dau",
+   "goi": "Ví dụ: Bác sĩ, Dược sĩ, Trưởng khoa"
+  },
+  {
+   "ma": "don_vi",
+   "nhan": "Tên doanh nghiệp / đơn vị",
+   "bat": false,
+   "kieu": "chu",
+   "hoa": "dau",
+   "goi": "Ví dụ: Bệnh viện, nhà thuốc, công ty"
+  }
+ ],
+ "cho_ve_giay": 60,
+ "cho_ve_form_giay": 150,
+ "ten_doc": "Gen-séc-tan",
+ "cau_la_gi": "0.1",
+ "cau_cong_dung": "0.3",
+ "bi_danh_ten": [
+  {
+   "cum": "your second time tu",
+   "dau": false
+  },
+  {
+   "cum": "your second time",
+   "dau": false
+  },
+  {
+   "cum": "second time tu",
+   "dau": false
+  },
+  {
+   "cum": "your second",
+   "dau": true
+  },
+  {
+   "cum": "gentlemen",
+   "dau": true
+  },
+  {
+   "cum": "gentle",
+   "dau": true
+  },
+  {
+   "cum": "gentel",
+   "dau": true
+  },
+  {
+   "cum": "translate",
+   "dau": true
+  },
+  {
+   "cum": "translation",
+   "dau": true
+  },
+  {
+   "cum": "gen z",
+   "dau": true
+  },
+  {
+   "cum": "gen zet",
+   "dau": true
+  },
+  {
+   "cum": "sex tu",
+   "dau": false
+  },
+  {
+   "cum": "sex tan",
+   "dau": false
+  },
+  {
+   "cum": "sec tu",
+   "dau": false
+  },
+  {
+   "cum": "danh sach an",
+   "dau": true
+  },
+  {
+   "cum": "danh sach ta",
+   "dau": true
+  },
+  {
+   "cum": "danh sach",
+   "dau": true
+  },
+  {
+   "cum": "settle",
+   "dau": true
+  },
+  {
+   "cum": "jessica tan",
+   "dau": false
+  },
+  {
+   "cum": "gel sec tan",
+   "dau": false
+  }
+ ]
+}

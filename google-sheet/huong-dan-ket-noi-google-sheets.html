@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Nối Google Sheets với robot — hướng dẫn 10 phút</title>
+<style>
+:root{--do:#C13F28;--do-dam:#5E0F18;--dao:#FDE9E1;--chu:#1b1b1b;--nhat:#5b5b5b;--vien:#e6dcd8}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;color:var(--chu);background:#faf7f6;line-height:1.6;font-size:17px}
+.khung{max-width:880px;margin:0 auto;padding:28px 20px 60px}
+header{border-bottom:4px solid var(--do);padding-bottom:16px;margin-bottom:24px}
+header small{color:var(--do);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+h1{font-size:30px;line-height:1.25;margin:6px 0 8px;color:var(--do-dam)}
+h2{font-size:21px;margin:34px 0 10px;color:var(--do)}
+p{margin:8px 0}
+.tom{background:var(--dao);border-left:5px solid var(--do);padding:14px 18px;border-radius:0 10px 10px 0}
+ol.buoc{counter-reset:b;list-style:none;padding:0;margin:0}
+ol.buoc > li{counter-increment:b;position:relative;background:#fff;border:1px solid var(--vien);border-radius:12px;
+  padding:16px 18px 16px 66px;margin:12px 0}
+ol.buoc > li::before{content:counter(b);position:absolute;left:16px;top:16px;width:36px;height:36px;border-radius:50%;
+  background:var(--do);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center}
+ol.buoc b.t{display:block;font-size:18px;margin-bottom:4px}
+kbd{background:#fff;border:1px solid #cfc4c0;border-bottom-width:2px;border-radius:6px;padding:1px 7px;font:inherit;font-size:15px;white-space:nowrap}
+code{background:#f1e9e6;border-radius:5px;padding:1px 6px;font-family:Consolas,monospace;font-size:15px}
+.ma{position:relative;margin:12px 0}
+pre{background:#1e1a19;color:#f4ece9;border-radius:12px;padding:16px;overflow:auto;font-family:Consolas,monospace;font-size:13.5px;
+  line-height:1.5;max-height:420px;margin:0}
+.nut{position:absolute;right:12px;top:12px;background:var(--do);color:#fff;border:0;border-radius:8px;padding:8px 16px;
+  font:inherit;font-weight:700;cursor:pointer}
+.luu-y{background:#fff;border:1px dashed var(--do);border-radius:12px;padding:14px 18px;margin:14px 0}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid var(--vien)}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--vien);vertical-align:top}
+th{background:var(--do);color:#fff}
+footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--vien);color:var(--nhat);font-size:15px}
+@media print{.nut{display:none}pre{max-height:none}}
+</style>
+</head>
+<body>
+<div class="khung">
+<header>
+  <small>Roboworld · Hướng dẫn cho khách hàng</small>
+  <h1>Nối Google Sheets của anh chị với robot</h1>
+  <p>Mỗi khách tham dự để lại thông tin trên robot sẽ tự thành <b>một dòng mới</b> trong trang tính của anh chị,
+     sau vài giây. Làm một lần, khoảng 10 phút, không cần cài phần mềm.</p>
+</header>
+
+<div class="tom">
+  <b>Anh chị cần:</b> một tài khoản Google và một trang tính Google Sheets (tạo mới hoặc dùng trang có sẵn).<br>
+  <b>Xong việc, anh chị gửi lại cho Roboworld hai thứ:</b> ① địa chỉ ứng dụng web (kết thúc bằng <code>/exec</code>)
+  và ② mã bí mật anh chị tự đặt ở bước 3.
+</div>
+
+<h2>Các bước</h2>
+<ol class="buoc">
+  <li><b class="t">Mở trang tính</b>
+      Vào <code>sheets.google.com</code>, tạo một trang tính mới (ví dụ đặt tên “Khách sự kiện — robot”), hoặc mở trang anh chị muốn dùng.
+      Robot sẽ tự tạo một tab tên <b>“Khách để lại thông tin”</b> — các tab khác không bị đụng tới.</li>
+  <li><b class="t">Mở Apps Script</b>
+      Trên thanh bảng chọn: <kbd>Tiện ích mở rộng</kbd> → <kbd>Apps Script</kbd>. Một thẻ mới mở ra với vài dòng mã có sẵn —
+      <b>xoá hết</b> rồi dán đoạn mã ở cuối trang này vào.</li>
+  <li><b class="t">Đặt mã bí mật</b>
+      Ở gần đầu đoạn mã có dòng <code>var MA_BI_MAT = 'doi-ma-nay-truoc-khi-dung';</code>.
+      Đổi phần trong dấu nháy thành một chuỗi riêng của anh chị, chỉ dùng chữ không dấu và số, ví dụ <code>chibach-2026-k7m2</code>.
+      Bấm biểu tượng đĩa mềm để lưu.</li>
+  <li><b class="t">Triển khai thành ứng dụng web</b>
+      Góc trên bên phải: <kbd>Triển khai</kbd> → <kbd>Tùy chọn triển khai mới</kbd> → bấm bánh răng chọn loại <kbd>Ứng dụng web</kbd>.<br>
+      · <b>Thực thi dưới tên:</b> Tôi<br>
+      · <b>Người có quyền truy cập:</b> Bất kỳ ai<br>
+      Bấm <kbd>Triển khai</kbd>. Google hỏi cấp quyền → chọn tài khoản của anh chị → <kbd>Nâng cao</kbd> →
+      <kbd>Đi tới … (không an toàn)</kbd> → <kbd>Cho phép</kbd>. Màn cảnh báo này hiện ra vì đoạn mã do chính anh chị
+      dán vào, chưa qua Google thẩm định — nó chỉ có quyền ghi vào trang tính này.</li>
+  <li><b class="t">Sao chép địa chỉ</b>
+      Google hiện “URL ứng dụng web”, dạng <code>https://script.google.com/macros/s/…/exec</code>. Bấm <kbd>Sao chép</kbd>.</li>
+  <li><b class="t">Thử nhanh</b>
+      Dán địa chỉ đó vào một thẻ trình duyệt mới. Thấy dòng chữ <code>{"ok":true, …}</code> là ứng dụng đang chạy.</li>
+  <li><b class="t">Gửi cho Roboworld</b>
+      Gửi <b>địa chỉ ở bước 5</b> và <b>mã bí mật ở bước 3</b> cho kỹ thuật viên Roboworld. Bên em nạp vào robot và gửi thử một dòng
+      — anh chị sẽ thấy dòng “DÒNG THỬ KẾT NỐI” hiện trong trang tính (xoá đi được).</li>
+</ol>
+
+<h2>Trang tính sẽ có những cột nào</h2>
+<table>
+  <tr><th>Cột</th><th>Nội dung</th></tr>
+  <tr><td>Thời gian</td><td>Giờ và ngày khách bấm gửi trên robot</td></tr>
+  <tr><td>Họ và tên · Số điện thoại</td><td>Hai ô bắt buộc. Số điện thoại lưu dạng chữ để giữ số 0 ở đầu</td></tr>
+  <tr><td>Chức vụ · Doanh nghiệp / đơn vị</td><td>Không bắt buộc — khách có thể bỏ trống</td></tr>
+  <tr><td>Nguồn</td><td>Khách để lại thông tin từ chế độ nào: Tra cứu, Giao tiếp AI hay màn chính</td></tr>
+  <tr><td>Câu hỏi đang xem</td><td>Câu hỏi khách xem gần nhất trước khi để lại thông tin — gợi ý cho cuộc gọi tư vấn</td></tr>
+  <tr><td>Robot · Mã dòng</td><td>Dùng để đối chiếu; mã dòng giúp tránh ghi trùng khi mạng chập chờn</td></tr>
+</table>
+
+<div class="luu-y">
+  <b>Ba điều nên biết</b><br>
+  · <b>Mất mạng không mất khách.</b> Robot luôn lưu vào bộ nhớ của nó trước, rồi mới gửi lên trang tính; chưa gửi được thì
+    cứ 30 giây thử lại. Cuối sự kiện Roboworld cũng gửi anh chị một tệp Excel đối chiếu.<br>
+  · <b>Giữ kín địa chỉ và mã bí mật.</b> Ai có cả hai là ghi được dòng vào trang tính (không đọc, không xoá được).
+    Muốn khoá lại sau sự kiện: <kbd>Triển khai</kbd> → <kbd>Quản lý các tùy chọn triển khai</kbd> → <kbd>Lưu trữ</kbd>.<br>
+  · <b>Đây là dữ liệu cá nhân của khách tham dự.</b> Anh chị chỉ chia sẻ trang tính cho người cần dùng.
+</div>
+
+<h2>Đoạn mã để dán ở bước 2</h2>
+<div class="ma">
+  <button class="nut" onclick="chep(this)">Sao chép mã</button>
+  <pre id="ma">/**
+ * NHẬN THÔNG TIN KHÁCH TỪ ROBOT → ghi vào trang tính này.
+ *
+ * Cách dùng (làm MỘT lần, bằng tài khoản Google là chủ trang tính):
+ *   1. Mở trang tính → Tiện ích mở rộng → Apps Script → xoá hết mã có sẵn → dán toàn bộ tệp này.
+ *   2. Đổi MA_BI_MAT bên dưới thành một chuỗi riêng của anh chị (chữ và số, không dấu).
+ *   3. Triển khai → Tùy chọn triển khai mới → loại &quot;Ứng dụng web&quot;:
+ *        Thực thi dưới tên: Tôi  ·  Người có quyền truy cập: Bất kỳ ai
+ *   4. Sao chép &quot;URL ứng dụng web&quot; (kết thúc bằng /exec) + mã bí mật, gửi cho kỹ thuật viên robot.
+ *
+ * Sửa mã sau này thì phải: Triển khai → Quản lý các tùy chọn triển khai → biểu tượng bút chì →
+ * Phiên bản: &quot;Phiên bản mới&quot; → Triển khai. Không làm bước đó thì địa chỉ cũ vẫn chạy mã cũ.
+ */
+
+/** ĐỔI chuỗi này. Robot phải gửi đúng chuỗi này thì dòng mới được ghi — chặn người lạ có địa chỉ mà ghi bừa. */
+var MA_BI_MAT = &#x27;doi-ma-nay-truoc-khi-dung&#x27;;
+
+/** Tên trang (tab) sẽ chứa dữ liệu — chưa có thì tự tạo. */
+var TEN_TRANG = &#x27;Khách để lại thông tin&#x27;;
+
+var TIEU_DE = [&#x27;Thời gian&#x27;, &#x27;Họ và tên&#x27;, &#x27;Số điện thoại&#x27;, &#x27;Chức vụ&#x27;, &#x27;Doanh nghiệp / đơn vị&#x27;,
+               &#x27;Nguồn (chế độ trên robot)&#x27;, &#x27;Câu hỏi đang xem&#x27;, &#x27;Robot&#x27;, &#x27;Mã dòng&#x27;];
+
+function doPost(e) {
+  var khoa = LockService.getScriptLock();
+  try {
+    khoa.waitLock(20000);                       // hai robot gửi cùng lúc thì xếp hàng, không ghi đè nhau
+    var d = JSON.parse(e.postData.contents);
+    if (d.ma !== MA_BI_MAT) return tra({ ok: false, loi: &#x27;sai ma bi mat&#x27; });
+
+    var bang = SpreadsheetApp.getActiveSpreadsheet();
+    var trang = bang.getSheetByName(TEN_TRANG) || bang.insertSheet(TEN_TRANG);
+    if (trang.getLastRow() === 0) {
+      trang.appendRow(TIEU_DE);
+      trang.getRange(1, 1, 1, TIEU_DE.length).setFontWeight(&#x27;bold&#x27;).setBackground(&#x27;#006097&#x27;).setFontColor(&#x27;#ffffff&#x27;);
+      trang.setFrozenRows(1);
+      trang.getRange(&#x27;C:C&#x27;).setNumberFormat(&#x27;@&#x27;);   // cột số điện thoại là CHỮ — không thì mất số 0 đầu
+    }
+
+    // Robot gửi lại khi mạng chập chờn — dòng nào đã có &quot;Mã dòng&quot; này rồi thì bỏ qua, không ghi trùng.
+    var cuoi = trang.getLastRow();
+    if (d.id &amp;&amp; cuoi &gt; 1) {
+      var tu = Math.max(2, cuoi - 300);
+      var ma = trang.getRange(tu, TIEU_DE.length, cuoi - tu + 1, 1).getValues();
+      for (var i = 0; i &lt; ma.length; i++) if (ma[i][0] === d.id) return tra({ ok: true, trung: true });
+    }
+
+    trang.appendRow([d.thoi_gian || &#x27;&#x27;, d.ho_ten || &#x27;&#x27;, &quot;&#x27;&quot; + (d.so_dien_thoai || &#x27;&#x27;), d.chuc_vu || &#x27;&#x27;,
+                     d.don_vi || &#x27;&#x27;, d.nguon || &#x27;&#x27;, d.quan_tam || &#x27;&#x27;, d.thiet_bi || &#x27;&#x27;, d.id || &#x27;&#x27;]);
+    return tra({ ok: true });
+  } catch (loi) {
+    return tra({ ok: false, loi: String(loi) });
+  } finally {
+    try { khoa.releaseLock(); } catch (x) {}
+  }
+}
+
+/** Mở địa chỉ /exec bằng trình duyệt để thử: thấy dòng chữ dưới đây là bản triển khai đang sống. */
+function doGet() {
+  return tra({ ok: true, tin: &#x27;Dia chi nhan thong tin khach tu robot dang hoat dong.&#x27; });
+}
+
+function tra(o) {
+  return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
+}
+</pre>
+</div>
+
+<footer>Cần hỗ trợ: Roboworld · hotline 0866 153 946</footer>
+</div>
+<script>
+function chep(nut){
+  var t = document.getElementById('ma').textContent;
+  function xong(){ nut.textContent = 'Đã sao chép'; setTimeout(function(){ nut.textContent = 'Sao chép mã'; }, 2000); }
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(xong, tay); } else tay();
+  function tay(){
+    var r = document.createRange(); r.selectNodeContents(document.getElementById('ma'));
+    var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    try{ document.execCommand('copy'); xong(); }catch(e){ nut.textContent = 'Bôi đen sẵn — bấm Ctrl+C'; }
+  }
+}
+</script>
+</body>
+</html>

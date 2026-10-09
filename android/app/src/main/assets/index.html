@@ -1,0 +1,2468 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<!-- ⚠⚠ PHẢI LÀ width=1920, KHÔNG PHẢI device-width.
+     Minibot cho trang khung 548×309 CSS px (1920×1080 điểm ảnh ở 560dpi). MainActivity bật
+     useWideViewPort + loadWithOverviewMode để WebView bố cục ở 1920 rồi thu nhỏ cả trang —
+     1rem vẫn là 16px, ảnh chụp trên máy tính giống hệt máy thật. -->
+<meta name="viewport" content="width=1920,user-scalable=no">
+<title>Gelsectan · Chi Bách Pharma</title>
+<style>
+/* ══════════════════════════════════════════════════════════════════════════
+   ⚠⚠ WEBVIEW CỦA MINIBOT LÀ CHROME 66 (2018) — ROM khoá, không nâng được.
+   Viết CSS/JS như năm 2018. dung-app.py có cổng chặn; thấy một mẫu cấm là DỪNG:
+     · khoảng cách trong flexbox → bị BỎ QUA lặng lẽ. Dùng margin (.x > * + *). Lưới dùng grid-gap.
+     · viết đủ top/right/bottom/left, không dùng thuộc tính rút gọn bốn cạnh
+     · tỉ lệ khung → kích thước cứng hoặc padding-top phần trăm
+     · cú pháp JS đời mới → GIẾT CẢ KHỐI SCRIPT, trang chết không một dòng lỗi
+   BẢNG MÀU lấy từ ba logo khách gửi: xanh Chi Bách #006097 · xanh Gelsectan #0D90C0 · lục #1FAE8B.
+   Robot đứng ở quầy của khách thì mặc màu của khách, không mặc đỏ Roboworld.
+   ══════════════════════════════════════════════════════════════════════════ */
+:root{
+  --xanh:#006097; --xanh-sang:#0D90C0; --luc:#1FAE8B; --nen:#F2F8FB; --the:#FFFFFF; --chu:#1D1D1B;
+  --chu-nhat:rgba(29,29,27,.74); --chu-mo:rgba(29,29,27,.42);
+  --vien:rgba(0,96,151,.16); --vien-dam:rgba(0,96,151,.36); --xanh-mo:rgba(0,96,151,.07);
+  --do:#C0392B;
+  --bong:0 .25rem 1rem rgba(0,96,151,.10); --bong-cao:0 1rem 2.6rem rgba(0,60,100,.24);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
+html{height:100%;overflow:hidden}
+body{font-family:"Segoe UI","Be Vietnam Pro",Roboto,Arial,sans-serif;background:var(--nen);color:var(--chu);
+  width:100vw;height:100vh;overflow:hidden;font-size:1rem;line-height:1.45}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer;text-align:left}
+/* ⚠ Thẻ nào khai display trong CSS thì thuộc tính hidden của HTML mất tác dụng — phải có luật này. */
+[hidden]{display:none !important}
+::-webkit-scrollbar{width:.7rem}
+::-webkit-scrollbar-thumb{background:var(--vien-dam);border-radius:1rem}
+
+.man-hinh{position:absolute;top:0;right:0;bottom:0;left:0;display:none;flex-direction:column}
+.man-hinh.hien{display:flex}
+
+/* ═══════════ Thanh đầu — chừa 2,9rem cho dải trạng thái của hãng ═══════════ */
+.dau{flex:none;display:flex;align-items:center;padding:2.9rem 1.75rem .8rem;background:var(--the);
+  border-bottom:.22rem solid var(--xanh-sang);box-shadow:var(--bong);z-index:5}
+.dau > * + *{margin-left:1rem}
+.dau .ten{flex:1;min-width:0}
+.dau .ten b{display:block;font-size:1.9rem;font-weight:700;line-height:1.25;color:var(--xanh)}
+.dau .ten span{display:block;font-size:1.1rem;color:var(--chu-nhat);margin-top:.1rem}
+.dau img.lg{height:3.4rem;width:auto;display:block;flex:none}
+#mh-chinh .dau > img.lg{height:4.3rem}
+.nut-dau{display:flex;align-items:center;padding:.8rem 1.6rem;border-radius:2rem;background:var(--xanh-mo);
+  border:.14rem solid var(--vien-dam);color:var(--xanh);font-size:1.3rem;font-weight:700;flex:none;white-space:nowrap}
+.nut-dau:active{transform:scale(.97)}
+.nut-dau.dam{background:var(--xanh);border-color:var(--xanh);color:var(--the)}
+.nut-dau.luc{background:var(--luc);border-color:var(--luc);color:var(--the)}
+
+/* ═══════════ Màn chờ / du hành / lễ tân — MÀN BIỂU CẢM ═══════════ */
+#mh-cho{background:#000;cursor:pointer}
+#mh-cho .lop-mat{position:absolute;top:0;right:0;bottom:0;left:0;z-index:0}
+.lop-mat video,.mat video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;display:block;
+  transition:opacity .25s;background:transparent}
+video.an{opacity:0}
+#mh-cho .lop{position:absolute;top:0;right:0;bottom:0;left:0;z-index:3;display:flex;flex-direction:column;
+  align-items:center;justify-content:space-between;padding:3.2rem 2rem 1.3rem;
+  background:linear-gradient(180deg,rgba(0,0,0,.25),transparent 18%,transparent 80%,rgba(0,0,0,.45))}
+#mh-cho .bien{background:var(--the);border-radius:1rem;padding:.5rem 1.4rem;box-shadow:var(--bong-cao);display:flex;align-items:center}
+#mh-cho .bien img{height:2.5rem;width:auto;display:block}
+#mh-cho .bien img + img{margin-left:1.4rem}
+#mh-cho .duoi-cho{display:flex;flex-direction:column;align-items:center}
+#mh-cho .moi{padding:.85rem 2.6rem;border-radius:5rem;background:var(--the);color:var(--xanh);
+  font-size:1.75rem;font-weight:700;box-shadow:var(--bong-cao);animation:tho 2.4s ease-in-out infinite}
+@keyframes tho{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+#mh-cho .che-do{margin-top:1rem;padding:.45rem 1.4rem;border-radius:3rem;background:rgba(0,0,0,.5);
+  border:.1rem solid rgba(255,255,255,.26);color:var(--the);font-size:1.2rem;max-width:80rem;text-align:center}
+
+/* ═══════════ Màn chính — bốn chế độ ═══════════ */
+#mh-chinh .dau{justify-content:space-between}
+#mh-chinh .dau .giua{flex:1;display:flex;flex-direction:column;align-items:center}
+#mh-chinh .dau .giua img{height:4.6rem}
+#mh-chinh .dau .giua span{font-size:1.15rem;color:var(--chu-nhat);margin-top:.2rem}
+.luoi-che-do{flex:1;min-height:0;display:grid;grid-template-columns:repeat(6,1fr);grid-template-rows:1fr 1fr;
+  grid-gap:1.5rem;padding:1.6rem 2.4rem 1rem}
+.o-che-do{background:var(--the);border:.18rem solid var(--vien);border-radius:1.7rem;display:flex;align-items:center;
+  padding:1.4rem 2rem;box-shadow:var(--bong);min-height:0;position:relative}
+.o-che-do{grid-column:span 2}
+.o-che-do:nth-child(n+4){grid-column:span 3}   /* hàng trên 3 ô · hàng dưới 2 ô */
+.o-che-do:active{transform:scale(.985);border-color:var(--xanh)}
+.o-che-do .vong{flex:none;width:7.4rem;height:7.4rem;border-radius:50%;background:var(--xanh);color:var(--the);
+  display:flex;align-items:center;justify-content:center}
+.o-che-do.sang .vong{background:var(--xanh-sang)}
+.o-che-do.luc .vong{background:var(--luc)}
+.o-che-do .chu{flex:1;min-width:0;margin-left:1.4rem}
+.o-che-do .chu b{display:block;font-size:2.3rem;font-weight:700;line-height:1.2;color:var(--xanh)}
+.o-che-do .chu span{display:block;font-size:1.25rem;color:var(--chu-nhat);margin-top:.5rem;line-height:1.4}
+.o-che-do .dang-bat{position:absolute;top:1rem;right:1.2rem;padding:.3rem 1rem;border-radius:2rem;background:var(--luc);
+  color:var(--the);font-size:1.05rem;font-weight:700}
+.chan-chinh{flex:none;display:flex;align-items:center;justify-content:space-between;padding:.2rem 2.4rem 1.3rem}
+.chan-chinh .trang-thai{font-size:1.2rem;color:var(--chu-nhat)}
+.chan-chinh .trang-thai b{color:var(--xanh)}
+
+/* ═══════════ Tra cứu — danh sách bên trái, giải đáp bên phải ═══════════ */
+.tc{flex:1;min-height:0;display:flex;padding:1.1rem 1.8rem 1.3rem}
+.tc-trai{flex:none;width:44rem;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-right:.7rem}
+.tc-phai{flex:1;min-width:0;margin-left:1.3rem;background:var(--the);border:.16rem solid var(--vien);
+  border-radius:1.5rem;box-shadow:var(--bong);display:flex;flex-direction:column;overflow:hidden}
+.tieu-muc{font-size:1.1rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--xanh-sang);
+  margin:.9rem 0 .5rem}
+.tieu-muc:first-child{margin-top:.1rem}
+.cau-hoi{width:100%;background:var(--the);border:.14rem solid var(--vien);border-radius:1rem;padding:.85rem 1.1rem;
+  display:flex;align-items:center;margin-bottom:.55rem;box-shadow:var(--bong);flex:0 0 auto}
+.cau-hoi .stt{flex:none;width:2.5rem;height:2.5rem;border-radius:50%;background:var(--xanh-mo);color:var(--xanh);
+  font-weight:700;font-size:1.15rem;display:flex;align-items:center;justify-content:center}
+.cau-hoi .chu{flex:1;min-width:0;margin-left:.9rem;font-size:1.32rem;font-weight:600;line-height:1.3}
+.cau-hoi.chon{background:var(--xanh);border-color:var(--xanh);color:var(--the)}
+.cau-hoi.chon .stt{background:var(--the)}
+.tc-trong{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 4rem}
+.tc-trong img{height:8rem;width:auto;margin-bottom:1.6rem}
+.tc-trong b{font-size:2.2rem;color:var(--xanh)}
+.tc-trong p{font-size:1.5rem;color:var(--chu-nhat);margin-top:.6rem;line-height:1.5}
+.tc-hoi{flex:none;padding:1.4rem 2.2rem 1rem;border-bottom:.12rem solid var(--vien)}
+.tc-hoi span{display:block;font-size:1.05rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--xanh-sang)}
+.tc-hoi b{display:block;font-size:2.15rem;line-height:1.25;color:var(--xanh);margin-top:.2rem}
+.tc-dap{flex:1;min-height:0;display:flex;align-items:center;padding:1rem 2.2rem;overflow:hidden}
+#tc-dap-chu{width:100%;max-height:100%;overflow:hidden;font-size:2.3rem;line-height:1.42;font-weight:500}
+.tc-nut{flex:none;display:flex;align-items:center;padding:.9rem 2.2rem 1.3rem}
+.tc-nut > * + *{margin-left:.8rem}
+.tc-nut .dan{flex:1}
+.nut-lon{padding:.85rem 1.7rem;border-radius:2rem;background:var(--xanh);color:var(--the);font-size:1.3rem;font-weight:700;
+  text-align:center;border:.16rem solid var(--xanh);white-space:nowrap}
+.nut-lon:active{transform:scale(.97)}
+.nut-lon.nhat{background:var(--the);color:var(--xanh)}
+.nut-lon.luc{background:var(--luc);border-color:var(--luc)}
+.nut-lon.to{font-size:1.7rem;padding:1.05rem 2.6rem}
+
+/* ═══════════ Giao tiếp AI ═══════════ */
+#mh-chat{background:var(--the)}
+#mh-chat .dinh{flex:none;display:flex;justify-content:center;padding:2.9rem 1.5rem .3rem;position:relative}
+/* khung mặt 16:10 viết bằng kích thước cứng; z-index:0 để hai lớp video không trồi lên đè nút */
+#mh-chat .mat{width:12.16rem;height:7.6rem;border-radius:1.1rem;overflow:hidden;background:#000;
+  box-shadow:var(--bong);flex:none;position:relative;z-index:0}
+#mh-chat .trai{position:absolute;left:1.5rem;top:2.9rem}
+#mh-chat .phai{position:absolute;right:1.5rem;top:2.9rem}
+.o-thoai{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:.5rem 3.4rem;overflow:hidden}
+#ai-cau{width:100%;max-height:100%;overflow:hidden;text-align:center;font-size:3rem;font-weight:700;line-height:1.28}
+#ai-cau.nguoi{font-weight:500;font-style:italic;color:var(--chu-nhat)}
+.duoi-chat{flex:none;padding:0 3rem .9rem;text-align:center}
+.goi-y{display:flex;justify-content:center;flex-wrap:wrap;margin-bottom:.5rem}
+.goi-y button{margin:0 .35rem .5rem;padding:.6rem 1.3rem;border-radius:2rem;font-size:1.22rem;font-weight:600;
+  background:var(--nen);border:.14rem solid var(--vien-dam);color:var(--chu)}
+.goi-y button.xem{background:var(--xanh-sang);border-color:var(--xanh-sang);color:var(--the)}
+.goi-y button.form{background:var(--luc);border-color:var(--luc);color:var(--the)}
+.thanh-mic{width:100%;padding:.85rem;border-radius:5rem;background:var(--xanh);color:var(--the);font-size:1.9rem;
+  font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 .3rem 1rem rgba(0,96,151,.36)}
+.thanh-mic #mic-bieu{margin-right:.9rem}
+.thanh-mic.cho{background:var(--xanh-sang)}
+.thanh-mic.nghe{background:var(--luc);animation:song 1.1s ease-in-out infinite}
+.thanh-mic.nghi{opacity:.55}
+@keyframes song{0%,100%{box-shadow:0 0 0 0 rgba(31,174,139,.55)}50%{box-shadow:0 0 0 1rem rgba(31,174,139,0)}}
+.dai{margin-top:.45rem;font-size:1.1rem;font-weight:600;color:var(--chu-nhat);min-height:1.3rem}
+.dai.cho,.dai.nghe{color:var(--xanh)}
+.dai.khong{color:var(--do);font-weight:700}
+
+/* ═══════════ Lớp phủ: bảng điền thông tin · hộp hỏi · màn kỹ thuật ═══════════ */
+.phu{position:absolute;top:0;right:0;bottom:0;left:0;background:var(--nen);display:none;flex-direction:column;z-index:20}
+.phu.hien{display:flex}
+.phu.mo{background:rgba(10,30,45,.62);align-items:center;justify-content:center;z-index:30}
+.hop-hoi{background:var(--the);border-radius:1.7rem;padding:2.2rem 2.8rem;width:58rem;box-shadow:var(--bong-cao);text-align:center}
+.hop-hoi b{display:block;font-size:2.3rem;color:var(--xanh);line-height:1.25}
+.hop-hoi p{font-size:1.5rem;line-height:1.5;color:var(--chu-nhat);margin:.8rem 0 1.6rem}
+.hang-nut{display:flex;justify-content:center;align-items:center;flex-wrap:wrap}
+.hang-nut > *{margin:.3rem .5rem}
+
+.form{flex:1;min-height:0;display:flex;flex-direction:column;padding:.8rem 3rem 0}
+.form > * + *{margin-top:.65rem}
+.form-loi-moi{flex:none;font-size:1.45rem;line-height:1.4;color:var(--chu);background:var(--the);
+  border-left:.4rem solid var(--luc);border-radius:0 .9rem .9rem 0;padding:.7rem 1.2rem;box-shadow:var(--bong)}
+.form-luoi{flex:none;display:grid;grid-template-columns:1fr 1fr;grid-gap:.7rem 1.1rem}
+.o{background:var(--the);border:.2rem solid var(--vien);border-radius:1rem;padding:.5rem 1rem;display:flex;
+  flex-direction:column;min-height:4.5rem;position:relative}
+.o > * + *{margin-top:.1rem}
+.o.dang{border-color:var(--xanh-sang);box-shadow:0 0 0 .25rem rgba(13,144,192,.16)}
+.o.loi{border-color:var(--do);background:#FFF6F4}
+.o label{font-size:.9rem;color:var(--chu-nhat);font-weight:700;text-transform:uppercase;letter-spacing:.03em}
+.o label i{font-style:normal;color:var(--do)}
+.o .gia{font-size:1.5rem;font-weight:700;min-height:2rem;line-height:1.3;white-space:nowrap;overflow:hidden}
+.o .gia.trong{color:#A9B7C2;font-weight:400}
+.o .gia .nhay{display:inline-block;width:.12rem;height:1.5rem;background:var(--xanh);vertical-align:-.2rem;
+  margin-left:.1rem;animation:nhaynhay .9s steps(2) infinite}
+@keyframes nhaynhay{to{opacity:0}}
+.o .bao{position:absolute;right:1rem;top:.5rem;font-size:.9rem;color:var(--do);font-weight:700}
+.form-tin{flex:none;display:flex;align-items:center;font-size:1rem;color:var(--chu-nhat)}
+.form-tin .hanh{margin-left:auto;display:flex}
+.form-tin .hanh > * + *{margin-left:.7rem}
+.ban-phim{flex:1;min-height:0;display:flex;flex-direction:column;padding-bottom:.9rem}
+.ban-phim > * + *{margin-top:.45rem}
+.ban-phim .hang{display:flex;flex:1;min-height:0}
+.ban-phim .hang > * + *{margin-left:.45rem}
+.phim{flex:1;min-width:0;border-radius:.7rem;background:var(--the);border:.15rem solid var(--vien);font-size:1.5rem;
+  font-weight:700;box-shadow:0 .15rem 0 #D3DEE6;display:flex;align-items:center;justify-content:center;text-align:center}
+.phim:active{background:#DDEFF7;transform:translateY(.1rem)}
+.phim.rong{flex:1.6}.phim.cach{flex:6}.phim.xong{flex:2.2;background:var(--xanh);color:#fff;border-color:var(--xanh)}
+.phim.phu-tro{background:var(--nen);color:var(--chu-nhat);font-size:1.05rem}
+.phim.shift.dang{background:var(--chu);color:#fff;border-color:var(--chu)}
+/* ⚠ margin-left/right tách riêng: dạng rút gọn "margin:0 auto" XOÁ margin-top — tức xoá đúng thứ
+   đang thay cho khoảng cách hàng trên WebView 66. Máy tính nhìn vẫn bình thường, máy thật dính liền. */
+.ban-phim.so .hang{max-width:44rem;margin-left:auto;margin-right:auto;width:100%}
+.cam-on{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem 6rem}
+.cam-on > * + *{margin-top:1rem}
+.cam-on .vong-to{width:8rem;height:8rem;border-radius:50%;background:var(--luc);color:var(--the);display:flex;
+  align-items:center;justify-content:center}
+.cam-on h2{font-size:2.8rem;font-weight:800;color:var(--xanh)}
+.cam-on p{font-size:1.5rem;color:var(--chu-nhat);max-width:60rem;line-height:1.5}
+.hop-bao{position:absolute;left:50%;bottom:2rem;transform:translateX(-50%);background:var(--chu);color:#fff;
+  padding:1rem 1.8rem;border-radius:1rem;font-size:1.2rem;box-shadow:var(--bong-cao);max-width:70%;text-align:center;
+  display:none;z-index:60}
+.hop-bao.hien{display:block}
+
+/* ═══════════ Nhảy múa (chép app Cao Xanh) ═══════════ */
+#mh-mua{background:#000;overflow:hidden}
+/* ⚠ z-index:0 BẮT BUỘC — tầng riêng cho hai video, không thì z-index của bộ đổi mặt thoát ra ngoài và đè lên
+   nút "Dừng nhảy" (dính ở app Tây Hòa 24/09/2026). */
+#mh-mua .lop-mat{position:absolute;top:0;right:0;bottom:0;left:0;z-index:0;transition:transform .09s ease-out}
+#mh-mua .lop-mat.nhun{transform:scale(1.05)}
+#mh-mua .lop-mat.nhun-nhe{transform:scale(1.02)}
+#mh-mua .lop-mua{position:absolute;left:0;right:0;bottom:0;z-index:5;padding:2rem 3rem 2.4rem;
+  display:flex;justify-content:center;background:linear-gradient(180deg,transparent,rgba(0,0,0,.78))}
+.hop-mua{background:var(--the);border-radius:1.6rem;padding:1.8rem 2.6rem;text-align:center;box-shadow:var(--bong-cao);max-width:60rem}
+.hop-mua b{display:block;font-size:2.3rem;color:var(--xanh)}
+.hop-mua p{font-size:1.5rem;margin:.6rem 0 1.3rem;line-height:1.5}
+#mua-dang{flex-direction:column}
+#mua-dang > *{margin:0}
+#mua-dang > * + *{margin-top:.6rem}
+.goi-y-dung{color:var(--the);font-size:1.25rem;opacity:.85}
+
+.cuon{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:1rem 2.2rem 1.8rem}
+.bang{width:100%;border-collapse:collapse;background:var(--the)}
+.bang th,.bang td{padding:.6rem 1rem;text-align:left;font-size:1.1rem;border-bottom:.08rem solid var(--vien);vertical-align:top;
+  -webkit-user-select:text;user-select:text}
+.bang th{background:var(--xanh);color:var(--the);font-weight:700}
+.bang td:first-child{width:24rem;font-weight:600}
+.kt-nut{display:flex;flex-wrap:wrap;margin:1rem 0 .4rem}
+.kt-nut > *{margin:0 .7rem .7rem 0}
+</style>
+</head>
+<body>
+
+<!-- ════════════════ MÀN BIỂU CẢM — màn chờ, và cũng là màn của chế độ Du hành / Lễ tân ════════════════ -->
+<div class="man-hinh hien" id="mh-cho" onclick="batDau()">
+  <div class="lop-mat">
+    <video id="clip-cho" muted playsinline></video>
+    <video id="clip-cho-2" class="an" muted playsinline></video>
+  </div>
+  <div class="lop">
+    <div class="bien"><img src="hinh/logo-gelsectan.png" alt="Gelsectan"><img src="hinh/logo-chibach.png" alt="Chi Bách Pharma"></div>
+    <div class="duoi-cho">
+      <div class="moi">Chạm vào màn hình để xem thông tin</div>
+      <div class="che-do" id="cho-tt" hidden></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ MÀN CHÍNH — bốn chế độ anh Trường yêu cầu 30/09/2026 ════════════════ -->
+<div class="man-hinh" id="mh-chinh">
+  <div class="dau">
+    <img class="lg" src="hinh/logo-devintec.png" alt="Devintec Pharma">
+    <div class="giua"><img class="lg" id="logo-giua" src="hinh/logo-gelsectan.png" alt="Gelsectan"><span id="chinh-phu">—</span></div>
+    <img class="lg" src="hinh/logo-chibach.png" alt="Chi Bách Pharma">
+  </div>
+  <div class="luoi-che-do">
+    <button class="o-che-do" onclick="moTraCuu()">
+      <span class="vong" data-hinh="tra-cuu"></span>
+      <span class="chu"><b>Tra cứu</b><span>Chạm để xem hỏi đáp về Gelsectan, robot đọc phần giải đáp</span></span>
+    </button>
+    <button class="o-che-do sang" onclick="moChat()">
+      <span class="vong" data-hinh="ai"></span>
+      <span class="chu"><b>Giao tiếp AI</b><span>Hỏi robot bằng giọng nói</span></span>
+    </button>
+    <button class="o-che-do luc" onclick="hoiDuHanh()">
+      <span class="vong" data-hinh="du-hanh"></span>
+      <span class="chu"><b>Du hành</b><span>Robot đi vòng quanh, vừa đi vừa giới thiệu</span></span>
+      <span class="dang-bat" id="nhan-dh" hidden>Đang bật</span>
+    </button>
+    <button class="o-che-do" onclick="hoiLeTan()">
+      <span class="vong" data-hinh="le-tan"></span>
+      <span class="chu"><b>Lễ tân</b><span>Robot đứng tại điểm lễ tân và mời khách</span></span>
+      <span class="dang-bat" id="nhan-lt" hidden>Đang bật</span>
+    </button>
+    <button class="o-che-do sang" onclick="vaoManMua()">
+      <span class="vong" data-hinh="nhay"></span>
+      <span class="chu"><b>Nhảy múa</b><span>Robot lắc lư theo nhạc khoảng nửa phút</span></span>
+    </button>
+  </div>
+  <div class="chan-chinh">
+    <div class="trang-thai" id="chinh-tt"></div>
+    <button class="nut-dau" onclick="veManCho()">Về màn hình chờ</button>
+  </div>
+</div>
+
+<!-- ════════════════ TRA CỨU — CHỈ CHẠM ════════════════ -->
+<div class="man-hinh" id="mh-tra-cuu">
+  <div class="dau">
+    <button class="nut-dau" onclick="veTrangChu()">Trang chủ</button>
+    <div class="ten"><b>Tra cứu về Gelsectan</b><span id="tc-phu">—</span></div>
+    <button class="nut-dau luc" onclick="moForm(null)">Để lại thông tin liên hệ</button>
+  </div>
+  <div class="tc">
+    <div class="tc-trai" id="tc-ds"></div>
+    <div class="tc-phai">
+      <div class="tc-trong" id="tc-trong">
+        <img src="hinh/logo-gelsectan.png" alt="">
+        <b>Chạm vào một câu hỏi bên trái</b>
+        <p>Robot sẽ hiện phần giải đáp và đọc cho anh chị nghe.</p>
+      </div>
+      <div class="tc-hoi" id="tc-hoi" hidden><span id="tc-nhom">—</span><b id="tc-hoi-chu">—</b></div>
+      <div class="tc-dap" id="tc-dap" hidden><div id="tc-dap-chu"></div></div>
+      <div class="tc-nut" id="tc-nut" hidden>
+        <button class="nut-lon nhat" id="tc-nut-doc" onclick="docLaiTraCuu()">Nghe lại</button>
+        <span class="dan"></span>
+        <button class="nut-lon nhat" onclick="cauKe(-1)">‹ Câu trước</button>
+        <button class="nut-lon nhat" onclick="cauKe(1)">Câu sau ›</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ NHẢY MÚA (chép app Cao Xanh) ════════════════ -->
+<div class="man-hinh" id="mh-mua">
+  <div class="lop-mat" id="lop-mat" onclick="if(dangNhay) dungNhay(false, false)">
+    <video id="clip-mua" muted loop playsinline></video>
+    <video id="clip-mua-2" class="an" muted loop playsinline></video>
+  </div>
+  <audio id="nhac-mua" preload="auto"></audio>
+  <div class="lop-mua">
+    <div class="hop-mua" id="mua-chuan-bi">
+      <b>Robot nhảy múa</b>
+      <p>Robot sẽ lắc người tại chỗ theo nhạc khoảng nửa phút.<br>
+         Anh chị vui lòng lùi lại một bước giúp em nhé!</p>
+      <div class="hang-nut">
+        <button class="nut-lon nhat to" onclick="ve('mh-chinh')">Quay lại</button>
+        <button class="nut-lon luc to" onclick="batDauNhay()">Bắt đầu nhảy</button>
+      </div>
+    </div>
+    <div class="hang-nut" id="mua-dang" hidden>
+      <button class="nut-lon to" onclick="dungNhay(false, false)">Dừng nhảy</button>
+      <div class="goi-y-dung">hoặc chạm vào bất kỳ đâu trên màn hình</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ GIAO TIẾP AI ════════════════ -->
+<div class="man-hinh" id="mh-chat">
+  <div class="dinh">
+    <button class="nut-dau luc trai" onclick="moForm(null)">Để lại thông tin liên hệ</button>
+    <div class="mat" id="ai-mat"><video id="clip-ai" muted playsinline></video><video id="clip-ai-2" class="an" muted playsinline></video></div>
+    <button class="nut-dau phai" onclick="veTrangChu()">Kết thúc</button>
+  </div>
+  <div class="o-thoai"><div id="ai-cau">—</div></div>
+  <div class="duoi-chat">
+    <div class="goi-y" id="goi-y-chat"></div>
+    <button class="thanh-mic" id="thanh-mic" onclick="bamMic()"><span id="mic-bieu"></span><span id="mic-chu">Bấm để nói</span></button>
+    <div class="dai" id="dai-mic"></div>
+  </div>
+</div>
+
+<!-- ════════════════ BẢNG ĐỂ LẠI THÔNG TIN — bật từ nút, và tự bật khi rời Tra cứu / Giao tiếp AI ════════════════ -->
+<div class="phu" id="phu-form">
+  <div class="dau">
+    <img class="lg" src="hinh/logo-chibach.png" alt="Chi Bách Pharma">
+    <div class="ten"><b>Để lại thông tin liên hệ</b><span>Chi Bách Pharma sẽ liên hệ tư vấn chi tiết hơn về Gelsectan</span></div>
+    <button class="nut-dau" id="form-bo-qua" onclick="boQuaForm()">Bỏ qua</button>
+  </div>
+  <div class="form" id="form-than">
+    <div class="form-loi-moi" id="form-loi-moi"></div>
+    <div class="form-luoi" id="form-luoi"></div>
+    <div class="form-tin">
+      <span id="form-nhac"></span>
+      <div class="hanh">
+        <button class="nut-lon nhat" onclick="oKeTiep()">Ô tiếp theo</button>
+        <button class="nut-lon luc" onclick="guiForm()">Gửi thông tin</button>
+      </div>
+    </div>
+    <div class="ban-phim" id="ban-phim"></div>
+  </div>
+  <div class="cam-on" id="form-cam-on" hidden>
+    <div class="vong-to" data-hinh="xong"></div>
+    <h2>Cảm ơn <span id="cam-on-ten"></span>!</h2>
+    <p id="cam-on-chu"></p>
+  </div>
+</div>
+
+<!-- ════════════════ HỘP HỎI — xác nhận trước khi robot rời chỗ ════════════════ -->
+<div class="phu mo" id="phu-hoi">
+  <div class="hop-hoi">
+    <b id="hoi-tieu-de">—</b>
+    <p id="hoi-chu">—</p>
+    <div class="hang-nut" id="hoi-nut"></div>
+  </div>
+</div>
+
+<!-- ════════════════ MÀN KỸ THUẬT — bấm GIỮ logo Gelsectan ở màn chính 1,2 giây ════════════════ -->
+<div class="phu" id="phu-kt">
+  <div class="dau">
+    <div class="ten"><b>Tình trạng robot</b><span>Dành cho kỹ thuật viên</span></div>
+    <button class="nut-dau" onclick="moManKyThuat()">Làm mới</button>
+    <button class="nut-dau dam" onclick="dongKT()">Đóng</button>
+  </div>
+  <div class="cuon">
+    <div class="kt-nut">
+      <button class="nut-lon nhat" onclick="kiemBanDo()">Kiểm tra bản đồ</button>
+      <button class="nut-lon nhat" onclick="docThuTen()">Đọc thử tên riêng</button>
+      <button class="nut-lon nhat" onclick="guiThuSheet()">Gửi thử một dòng lên Google Sheets</button>
+    </div>
+    <div id="kt-noi-dung"></div>
+  </div>
+</div>
+
+<div class="hop-bao" id="hop-bao"></div>
+
+<script>
+window.DU_LIEU={
+ "san_pham": "Gelsectan",
+ "don_vi": "Chi Bách Pharma",
+ "cap_nhat": "09/10/2026",
+ "nguon": "Bộ câu hỏi cơ bản về Gelsectan — Chi Bách Pharma gửi 30/09/2026",
+ "luu_y_khach": "Nhóm câu hỏi nhập môn / thực hành kê đơn. Mỗi câu trả lời ≤30 giây nói. Các câu về trẻ em, thai kỳ, tương tác thuốc, bảo quản: robot trả lời mức khái quát và mời tham khảo tờ HDSD / chuyển Medical, KHÔNG tự khẳng định ngoài dữ liệu.",
+ "compliance": [
+  "Dùng “hỗ trợ kiểm soát/quản lý triệu chứng”, không “chữa khỏi”.",
+  "Gọi “thiết bị y tế”, không gọi “thuốc”.",
+  "Liều dùng/cách dùng/bảo quản: ưu tiên nhãn và tờ HDSD đã phê duyệt tại Việt Nam khi có khác biệt.",
+  "Câu vượt dữ liệu (trẻ em, thai kỳ, tương tác) → trả lời khái quát và chuyển Medical.",
+  "Claim “trúng thầu nhiều bệnh viện”: chỉ nêu khi có danh sách/quyết định cập nhật; không phóng đại."
+ ],
+ "nhom": [
+  {
+   "ma": "co-che",
+   "ten": "Cơ chế tác động",
+   "phu": "Màng bảo vệ niêm mạc ruột, hấp thu, khác men vi sinh",
+   "so": 4
+  },
+  {
+   "ma": "tong-quan",
+   "ten": "Tổng quan sản phẩm",
+   "phu": "Gelsectan là gì, thành phần, chỉ định, xuất xứ",
+   "so": 6
+  },
+  {
+   "ma": "lieu-dung",
+   "ten": "Liều dùng và cách dùng",
+   "phu": "Liều, thời điểm uống, thời gian điều trị, bảo quản",
+   "so": 6
+  },
+  {
+   "ma": "doi-tuong",
+   "ten": "Đối tượng đặc biệt",
+   "phu": "Trẻ em, thai kỳ, cho con bú, tương tác",
+   "so": 3
+  },
+  {
+   "ma": "an-toan",
+   "ten": "An toàn",
+   "phu": "Tác dụng phụ, dùng lâu dài, táo bón",
+   "so": 3
+  },
+  {
+   "ma": "bang-chung",
+   "ten": "Bằng chứng và lựa chọn",
+   "phu": "Nghiên cứu lâm sàng, so với loperamide, thể bệnh",
+   "so": 3
+  }
+ ],
+ "cau": [
+  {
+   "id": "0.1",
+   "hoi": "Gelsectan là thuốc hay thực phẩm chức năng?",
+   "dap": "Gelsectan không phải thuốc cũng không phải thực phẩm chức năng, mà là thiết bị y tế (medical device). Sản phẩm đạt tác dụng chính bằng cơ chế vật lý tại chỗ – tạo màng bảo vệ trên niêm mạc ruột – chứ không qua cơ chế dược lý toàn thân.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "Gelsectan là gì",
+    "Gelsectan thuộc loại sản phẩm gì",
+    "Gelsectan có phải là thuốc không",
+    "đây là thuốc hay thiết bị y tế",
+    "Gelsectan có phải thực phẩm chức năng không",
+    "sản phẩm này được phân loại là gì",
+    "giới thiệu về Gelsectan"
+   ],
+   "doc": "Gen-séc-tan không phải thuốc cũng không phải thực phẩm chức năng, mà là thiết bị y tế. Sản phẩm đạt tác dụng chính bằng cơ chế vật lý tại chỗ, tạo màng bảo vệ trên niêm mạc ruột, chứ không qua cơ chế dược lý toàn thân.",
+   "hoi_doc": "Gen-séc-tan là thuốc hay thực phẩm chức năng?",
+   "giay": 14.5
+  },
+  {
+   "id": "0.2",
+   "hoi": "Gelsectan chứa thành phần gì?",
+   "dap": "Gelsectan chứa ba thành phần chính: Xyloglucan, protein đậu kết hợp tannin từ chiết xuất hạt nho, và xylo-oligosaccharides. Ba thành phần phối hợp tạo lớp màng bảo vệ và hỗ trợ phục hồi hàng rào niêm mạc ruột.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "thành phần của Gelsectan là gì",
+    "Gelsectan gồm những chất gì",
+    "trong Gelsectan có gì",
+    "hoạt chất của Gelsectan",
+    "công thức của Gelsectan gồm gì",
+    "Gelsectan có xyloglucan không",
+    "một viên có chứa những gì"
+   ],
+   "doc": "Gen-séc-tan chứa ba thành phần chính: Xy-lô-glu-can, prô-tê-in đậu kết hợp ta-nanh từ chiết xuất hạt nho, và xy-lô ô-li-gô-sác-ca-rít. Ba thành phần phối hợp tạo lớp màng bảo vệ và hỗ trợ phục hồi hàng rào niêm mạc ruột.",
+   "hoi_doc": "Gen-séc-tan chứa thành phần gì?",
+   "giay": 14.7
+  },
+  {
+   "id": "0.3",
+   "hoi": "Gelsectan dùng cho bệnh gì?",
+   "dap": "Gelsectan được chỉ định để khôi phục chức năng ruột ở bệnh nhân rối loạn do hội chứng ruột kích thích – liên quan tình trạng quá mẫn của ruột hoặc do dùng một số thuốc – nhằm giảm và ngăn ngừa tiêu chảy mạn hoặc tái phát, chướng bụng, đau bụng, đầy hơi và trung tiện. Bao gồm thể tiêu chảy và thể sau nhiễm trùng.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "chỉ định của Gelsectan",
+    "Gelsectan chỉ định cho bệnh gì",
+    "Gelsectan dùng trong trường hợp nào",
+    "Gelsectan có tác dụng gì",
+    "Gelsectan dùng để làm gì",
+    "công dụng của Gelsectan",
+    "Gelsectan điều trị bệnh gì",
+    "bệnh nhân nào nên dùng Gelsectan",
+    "Gelsectan dùng làm gì"
+   ],
+   "doc": "Gen-séc-tan được chỉ định để khôi phục chức năng ruột ở bệnh nhân rối loạn do hội chứng ruột kích thích, liên quan tình trạng quá mẫn của ruột hoặc do dùng một số thuốc, nhằm giảm và ngăn ngừa tiêu chảy mạn hoặc tái phát, chướng bụng, đau bụng, đầy hơi và trung tiện. Bao gồm thể tiêu chảy và thể sau nhiễm trùng.",
+   "hoi_doc": "Gen-séc-tan dùng cho bệnh gì?",
+   "giay": 20.9
+  },
+  {
+   "id": "0.4",
+   "hoi": "Gelsectan do nước nào sản xuất?",
+   "dap": "Gelsectan được sản xuất tại Ý, bởi nhà máy Biofarma. Chủ sở hữu sản phẩm là Devintec, Thụy Sĩ. Tại Việt Nam, sản phẩm được phân phối độc quyền bởi Chi Bách Pharma.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "Gelsectan sản xuất ở đâu",
+    "xuất xứ của Gelsectan",
+    "Gelsectan của nước nào",
+    "Gelsectan của hãng nào",
+    "nhà sản xuất Gelsectan là ai",
+    "công ty nào phân phối Gelsectan",
+    "Gelsectan nhập khẩu từ đâu"
+   ],
+   "doc": "Gen-séc-tan được sản xuất tại Ý, bởi nhà máy Bi-ô-phác-ma. Chủ sở hữu sản phẩm là Đê-vin-téc, Thụy Sĩ. Tại Việt Nam, sản phẩm được phân phối độc quyền bởi Chi Bách Phác-ma.",
+   "hoi_doc": "Gen-séc-tan do nước nào sản xuất?",
+   "giay": 11.5
+  },
+  {
+   "id": "0.5",
+   "hoi": "Gelsectan có dạng bào chế gì, hộp bao nhiêu viên?",
+   "dap": "Gelsectan ở dạng viên nang, đóng hộp 30 viên nang.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "Gelsectan dạng gì",
+    "Gelsectan là viên hay gói",
+    "một hộp Gelsectan có bao nhiêu viên",
+    "quy cách đóng gói của Gelsectan",
+    "Gelsectan dạng viên nang phải không",
+    "hộp mấy viên"
+   ],
+   "doc": "Gen-séc-tan ở dạng viên nang, đóng hộp ba mươi viên nang.",
+   "hoi_doc": "Gen-séc-tan có dạng bào chế gì, hộp bao nhiêu viên?",
+   "giay": 3.8
+  },
+  {
+   "id": "0.6",
+   "hoi": "Gelsectan hoạt động như thế nào?",
+   "dap": "Gelsectan tạo một lớp màng bám dính phủ trên niêm mạc ruột, hoạt động như một hàng rào cơ học bảo vệ. Lớp màng này giúp phục hồi hàng rào biểu mô, giảm tình trạng tăng tính thấm ruột, qua đó hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích.",
+   "nhom": "co-che",
+   "bien_the": [
+    "cơ chế tác dụng của Gelsectan",
+    "cơ chế của Gelsectan là gì",
+    "Gelsectan tác động như thế nào",
+    "Gelsectan hoạt động ra sao",
+    "Gelsectan tạo màng bảo vệ như thế nào",
+    "nguyên lý hoạt động của Gelsectan"
+   ],
+   "doc": "Gen-séc-tan tạo một lớp màng bám dính phủ trên niêm mạc ruột, hoạt động như một hàng rào cơ học bảo vệ. Lớp màng này giúp phục hồi hàng rào biểu mô, giảm tình trạng tăng tính thấm ruột, qua đó hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích.",
+   "hoi_doc": "Gen-séc-tan hoạt động như thế nào?",
+   "giay": 16.8
+  },
+  {
+   "id": "0.7",
+   "hoi": "“Bảo vệ hàng rào niêm mạc ruột” nghĩa là gì?",
+   "dap": "Niêm mạc ruột bình thường có hàng rào kín giữa các tế bào, ngăn vi khuẩn và kháng nguyên xâm nhập. Khi hàng rào này lỏng lẻo, tính thấm tăng lên, gây vi viêm và tăng nhạy cảm – góp phần gây triệu chứng. Gelsectan phủ một lớp màng bảo vệ, giúp bịt kín và phục hồi hàng rào này.",
+   "nhom": "co-che",
+   "bien_the": [
+    "hàng rào niêm mạc ruột là gì",
+    "bảo vệ hàng rào niêm mạc nghĩa là sao",
+    "tăng tính thấm ruột là gì",
+    "tại sao phải bảo vệ niêm mạc ruột",
+    "hàng rào ruột lỏng lẻo thì sao",
+    "giải thích về hàng rào niêm mạc ruột"
+   ],
+   "doc": "Niêm mạc ruột bình thường có hàng rào kín giữa các tế bào, ngăn vi khuẩn và kháng nguyên xâm nhập. Khi hàng rào này lỏng lẻo, tính thấm tăng lên, gây vi viêm và tăng nhạy cảm, góp phần gây triệu chứng. Gen-séc-tan phủ một lớp màng bảo vệ, giúp bịt kín và phục hồi hàng rào này.",
+   "hoi_doc": "Bảo vệ hàng rào niêm mạc ruột nghĩa là gì?",
+   "giay": 18.5
+  },
+  {
+   "id": "0.8",
+   "hoi": "Gelsectan có hấp thu vào máu không?",
+   "dap": "Không. Nghiên cứu hấp thu trên mô hình biểu mô ruột cho thấy Gelsectan và các thành phần không bị hấp thu qua tế bào ruột vào máu; sản phẩm chỉ tạo lớp màng tại chỗ trên bề mặt niêm mạc. Đây là cơ sở cho hồ sơ an toàn thuận lợi và ít tương tác thuốc.",
+   "nhom": "co-che",
+   "bien_the": [
+    "Gelsectan có hấp thu không",
+    "Gelsectan có vào máu không",
+    "Gelsectan có hấp thu toàn thân không",
+    "Gelsectan có ngấm vào cơ thể không",
+    "sản phẩm có tác dụng toàn thân không",
+    "Gelsectan chỉ tác dụng tại chỗ phải không"
+   ],
+   "doc": "Không. Nghiên cứu hấp thu trên mô hình biểu mô ruột cho thấy Gen-séc-tan và các thành phần không bị hấp thu qua tế bào ruột vào máu; sản phẩm chỉ tạo lớp màng tại chỗ trên bề mặt niêm mạc. Đây là cơ sở cho hồ sơ an toàn thuận lợi và ít tương tác thuốc.",
+   "hoi_doc": "Gen-séc-tan có hấp thu vào máu không?",
+   "giay": 16.8
+  },
+  {
+   "id": "0.9",
+   "hoi": "Gelsectan khác gì so với men vi sinh (probiotic)?",
+   "dap": "Men vi sinh bổ sung lợi khuẩn, hiệu quả thay đổi theo chủng. Gelsectan tạo màng bảo vệ vật lý giúp phục hồi hàng rào niêm mạc, đồng thời thành phần xylo-oligosaccharides là prebiotic hỗ trợ hệ vi sinh. Hai nhóm có cơ chế khác nhau và có thể bổ sung cho nhau.",
+   "nhom": "co-che",
+   "bien_the": [
+    "Gelsectan khác probiotic thế nào",
+    "so sánh Gelsectan với men vi sinh",
+    "Gelsectan có phải men vi sinh không",
+    "Gelsectan và men tiêu hóa khác nhau thế nào",
+    "dùng chung với men vi sinh được không",
+    "Gelsectan có lợi khuẩn không"
+   ],
+   "doc": "Men vi sinh bổ sung lợi khuẩn, hiệu quả thay đổi theo chủng. Gen-séc-tan tạo màng bảo vệ vật lý giúp phục hồi hàng rào niêm mạc, đồng thời thành phần xy-lô ô-li-gô-sác-ca-rít là pờ-ri-bai-ô-tíc hỗ trợ hệ vi sinh. Hai nhóm có cơ chế khác nhau và có thể bổ sung cho nhau.",
+   "hoi_doc": "Gen-séc-tan khác gì so với men vi sinh ?",
+   "giay": 17.9
+  },
+  {
+   "id": "0.10",
+   "hoi": "Liều dùng Gelsectan như thế nào?",
+   "dap": "Theo tờ thông tin sản phẩm, dùng 1 đến 2 viên nang vào buổi sáng và buổi tối, trong 2 đến 4 tuần. Trong các nghiên cứu, phác đồ thường dùng là liều tấn công 2 viên × 2 lần mỗi ngày, sau đó duy trì 1 viên × 2 lần mỗi ngày. Bác sĩ điều chỉnh theo đáp ứng của bệnh nhân.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "liều dùng Gelsectan",
+    "Gelsectan uống mấy viên một ngày",
+    "mỗi ngày uống bao nhiêu viên",
+    "cách dùng Gelsectan",
+    "Gelsectan uống thế nào",
+    "liều tấn công và liều duy trì là bao nhiêu",
+    "ngày uống mấy lần",
+    "một lần uống mấy viên"
+   ],
+   "doc": "Theo tờ thông tin sản phẩm, dùng một đến hai viên nang vào buổi sáng và buổi tối, trong hai đến bốn tuần. Trong các nghiên cứu, phác đồ thường dùng là liều tấn công hai viên, hai lần mỗi ngày, sau đó duy trì một viên, hai lần mỗi ngày. Bác sĩ điều chỉnh theo đáp ứng của bệnh nhân.",
+   "hoi_doc": "Liều dùng Gen-séc-tan như thế nào?",
+   "giay": 18.7
+  },
+  {
+   "id": "0.11",
+   "hoi": "Nên uống trước hay sau ăn?",
+   "dap": "Gelsectan thường được uống trước bữa ăn, vào buổi sáng và buổi tối. Chi tiết xin theo tờ hướng dẫn sử dụng chính thức.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "Gelsectan uống trước hay sau ăn",
+    "uống lúc đói hay lúc no",
+    "uống Gelsectan vào lúc nào",
+    "thời điểm uống Gelsectan",
+    "uống trước bữa ăn hay sau bữa ăn",
+    "nên uống buổi sáng hay buổi tối"
+   ],
+   "doc": "Gen-séc-tan thường được uống trước bữa ăn, vào buổi sáng và buổi tối. Chi tiết xin theo tờ hướng dẫn sử dụng chính thức.",
+   "hoi_doc": "Nên uống trước hay sau ăn?",
+   "giay": 8.0
+  },
+  {
+   "id": "0.12",
+   "hoi": "Một đợt điều trị kéo dài bao lâu?",
+   "dap": "Một đợt thường kéo dài 2 đến 4 tuần. Tùy đáp ứng, bác sĩ có thể dùng liều tấn công rồi chuyển sang liều duy trì. Nghiên cứu dài hạn theo dõi tới 6 tháng cho thấy hiệu quả được duy trì và an toàn.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "dùng Gelsectan trong bao lâu",
+    "một liệu trình Gelsectan bao lâu",
+    "uống Gelsectan mấy tuần",
+    "thời gian điều trị là bao lâu",
+    "liệu trình kéo dài mấy tuần",
+    "phải uống bao nhiêu ngày"
+   ],
+   "doc": "Một đợt thường kéo dài hai đến bốn tuần. Tùy đáp ứng, bác sĩ có thể dùng liều tấn công rồi chuyển sang liều duy trì. Nghiên cứu dài hạn theo dõi tới sáu tháng cho thấy hiệu quả được duy trì và an toàn.",
+   "hoi_doc": "Một đợt điều trị kéo dài bao lâu?",
+   "giay": 13.4
+  },
+  {
+   "id": "0.13",
+   "hoi": "Bao lâu thì bệnh nhân thấy hiệu quả?",
+   "dap": "Cải thiện thường thấy rõ ngay từ tháng đầu điều trị. Trong nghiên cứu dài hạn, các điểm triệu chứng giảm có ý nghĩa ngay sau 1 tháng và duy trì bền vững. Một số bệnh nhân thấy cải thiện cảm giác mót rặn và số lần đi tiêu trong những tuần đầu.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "bao lâu thì Gelsectan có tác dụng",
+    "sau bao lâu thấy hiệu quả",
+    "uống bao lâu thì đỡ",
+    "khi nào thấy cải thiện triệu chứng",
+    "Gelsectan có hiệu quả nhanh không",
+    "mất bao lâu để có kết quả"
+   ],
+   "doc": "Cải thiện thường thấy rõ ngay từ tháng đầu điều trị. Trong nghiên cứu dài hạn, các điểm triệu chứng giảm có ý nghĩa ngay sau một tháng và duy trì bền vững. Một số bệnh nhân thấy cải thiện cảm giác mót rặn và số lần đi tiêu trong những tuần đầu.",
+   "hoi_doc": "Bao lâu thì bệnh nhân thấy hiệu quả?",
+   "giay": 16.3
+  },
+  {
+   "id": "0.14",
+   "hoi": "Có cần duy trì sau khi hết triệu chứng không?",
+   "dap": "Tùy từng bệnh nhân. Một số trường hợp giảm liều dần sau khi triệu chứng cải thiện; cũng có trường hợp triệu chứng tái phát nhẹ sau khi ngưng và cần dùng lại. Bác sĩ quyết định phác đồ duy trì phù hợp với từng người.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "hết triệu chứng có cần uống tiếp không",
+    "có cần dùng duy trì không",
+    "khi đỡ rồi có ngưng được không",
+    "ngưng Gelsectan có tái phát không",
+    "có phải uống duy trì lâu dài không",
+    "hết triệu chứng thì dừng được chưa"
+   ],
+   "doc": "Tùy từng bệnh nhân. Một số trường hợp giảm liều dần sau khi triệu chứng cải thiện; cũng có trường hợp triệu chứng tái phát nhẹ sau khi ngưng và cần dùng lại. Bác sĩ quyết định phác đồ duy trì phù hợp với từng người.",
+   "hoi_doc": "Có cần duy trì sau khi hết triệu chứng không?",
+   "giay": 14.3
+  },
+  {
+   "id": "0.15",
+   "hoi": "Gelsectan có dùng được cho trẻ em không?",
+   "dap": "Dữ liệu lâm sàng của Gelsectan trên chỉ định hội chứng ruột kích thích tập trung ở người trưởng thành. Về việc dùng cho trẻ em, em mời Bác sĩ tham khảo tờ thông tin sản phẩm hoặc trao đổi với chuyên viên Medical để được tư vấn chính xác ạ.",
+   "nhom": "doi-tuong",
+   "bien_the": [
+    "trẻ em dùng Gelsectan được không",
+    "Gelsectan cho trẻ nhỏ được không",
+    "bé mấy tuổi thì dùng được",
+    "dùng cho bệnh nhi được không",
+    "Gelsectan có dùng cho trẻ con không",
+    "trẻ dưới mười hai tuổi uống được không"
+   ],
+   "doc": "Dữ liệu lâm sàng của Gen-séc-tan trên chỉ định hội chứng ruột kích thích tập trung ở người trưởng thành. Về việc dùng cho trẻ em, em mời Bác sĩ tham khảo tờ thông tin sản phẩm hoặc trao đổi với chuyên viên Mê-đi-cồ để được tư vấn chính xác ạ.",
+   "hoi_doc": "Gen-séc-tan có dùng được cho trẻ em không?",
+   "giay": 16.1
+  },
+  {
+   "id": "0.16",
+   "hoi": "Phụ nữ có thai hoặc cho con bú dùng được không?",
+   "dap": "Về sử dụng cho phụ nữ có thai hoặc cho con bú, em chưa có đủ dữ liệu để khẳng định. Em xin mời Bác sĩ tham khảo tờ hướng dẫn sử dụng hoặc kết nối với chuyên viên Medical để được tư vấn ạ.",
+   "nhom": "doi-tuong",
+   "bien_the": [
+    "bà bầu dùng Gelsectan được không",
+    "phụ nữ mang thai uống được không",
+    "đang cho con bú có dùng được không",
+    "có thai dùng Gelsectan có sao không",
+    "mẹ bầu uống được không",
+    "thai phụ dùng được không"
+   ],
+   "doc": "Về sử dụng cho phụ nữ có thai hoặc cho con bú, em chưa có đủ dữ liệu để khẳng định. Em xin mời Bác sĩ tham khảo tờ hướng dẫn sử dụng hoặc kết nối với chuyên viên Mê-đi-cồ để được tư vấn ạ.",
+   "hoi_doc": "Phụ nữ có thai hoặc cho con bú dùng được không?",
+   "giay": 12.5
+  },
+  {
+   "id": "0.17",
+   "hoi": "Gelsectan có tương tác với thuốc khác không?",
+   "dap": "Do Gelsectan không hấp thu vào máu mà chỉ tác động tại chỗ trên niêm mạc, nguy cơ tương tác toàn thân thấp. Tuy nhiên, để chắc chắn về việc dùng đồng thời với thuốc khác, em mời Bác sĩ tham khảo tờ hướng dẫn sử dụng chính thức ạ.",
+   "nhom": "doi-tuong",
+   "bien_the": [
+    "Gelsectan có tương tác thuốc không",
+    "uống chung với thuốc khác được không",
+    "dùng cùng thuốc khác có sao không",
+    "Gelsectan có ảnh hưởng thuốc khác không",
+    "dùng đồng thời với kháng sinh được không",
+    "có cần uống cách xa thuốc khác không"
+   ],
+   "doc": "Do Gen-séc-tan không hấp thu vào máu mà chỉ tác động tại chỗ trên niêm mạc, nguy cơ tương tác toàn thân thấp. Tuy nhiên, để chắc chắn về việc dùng đồng thời với thuốc khác, em mời Bác sĩ tham khảo tờ hướng dẫn sử dụng chính thức ạ.",
+   "hoi_doc": "Gen-séc-tan có tương tác với thuốc khác không?",
+   "giay": 15.4
+  },
+  {
+   "id": "0.18",
+   "hoi": "Bảo quản Gelsectan thế nào?",
+   "dap": "Bảo quản nơi khô ráo, theo điều kiện ghi trên bao bì sản phẩm. Chi tiết về nhiệt độ và hạn dùng xin theo nhãn và tờ hướng dẫn sử dụng chính thức.",
+   "nhom": "lieu-dung",
+   "bien_the": [
+    "bảo quản Gelsectan như thế nào",
+    "Gelsectan bảo quản ở nhiệt độ nào",
+    "cách bảo quản sản phẩm",
+    "có cần để tủ lạnh không",
+    "hạn dùng của Gelsectan",
+    "hạn sử dụng bao lâu",
+    "điều kiện bảo quản của Gelsectan"
+   ],
+   "doc": "Bảo quản nơi khô ráo, theo điều kiện ghi trên bao bì sản phẩm. Chi tiết về nhiệt độ và hạn dùng xin theo nhãn và tờ hướng dẫn sử dụng chính thức.",
+   "hoi_doc": "Bảo quản Gen-séc-tan thế nào?",
+   "giay": 9.7
+  },
+  {
+   "id": "0.19",
+   "hoi": "Gelsectan có tác dụng phụ gì không?",
+   "dap": "Trong các nghiên cứu, tác dụng phụ chủ yếu nhẹ và phần lớn không liên quan điều trị, không có biến cố nghiêm trọng. Tác dụng phụ đáng kể được ghi nhận là táo bón ở một số ít bệnh nhân trong tháng đầu. Hồ sơ an toàn nhìn chung thuận lợi.",
+   "nhom": "an-toan",
+   "bien_the": [
+    "tác dụng phụ của Gelsectan",
+    "Gelsectan có tác dụng không mong muốn gì",
+    "uống Gelsectan có bị gì không",
+    "Gelsectan có an toàn không",
+    "tác dụng ngoại ý của Gelsectan",
+    "có phản ứng phụ không",
+    "có tác dụng phát sinh nào không"
+   ],
+   "doc": "Trong các nghiên cứu, tác dụng phụ chủ yếu nhẹ và phần lớn không liên quan điều trị, không có biến cố nghiêm trọng. Tác dụng phụ đáng kể được ghi nhận là táo bón ở một số ít bệnh nhân trong tháng đầu. Hồ sơ an toàn nhìn chung thuận lợi.",
+   "hoi_doc": "Gen-séc-tan có tác dụng phụ gì không?",
+   "giay": 15.7
+  },
+  {
+   "id": "0.20",
+   "hoi": "Dùng lâu dài có an toàn không?",
+   "dap": "Nghiên cứu quan sát dài hạn theo dõi tới 6 tháng cho thấy Gelsectan an toàn, tác dụng phụ nhẹ và phần lớn không liên quan điều trị, không có biến cố nghiêm trọng. Việc không hấp thu toàn thân cũng góp phần vào hồ sơ an toàn này.",
+   "nhom": "an-toan",
+   "bien_the": [
+    "dùng Gelsectan lâu dài có sao không",
+    "uống lâu dài có an toàn không",
+    "dùng kéo dài có hại không",
+    "uống nhiều tháng có ảnh hưởng gì không",
+    "dùng dài hạn được không",
+    "sử dụng sáu tháng có an toàn không",
+    "sử dụng lâu dài có an toàn không"
+   ],
+   "doc": "Nghiên cứu quan sát dài hạn theo dõi tới sáu tháng cho thấy Gen-séc-tan an toàn, tác dụng phụ nhẹ và phần lớn không liên quan điều trị, không có biến cố nghiêm trọng. Việc không hấp thu toàn thân cũng góp phần vào hồ sơ an toàn này.",
+   "hoi_doc": "Dùng lâu dài có an toàn không?",
+   "giay": 15.5
+  },
+  {
+   "id": "0.21",
+   "hoi": "Gelsectan có gây táo bón khi cầm tiêu chảy không?",
+   "dap": "Gelsectan giảm tiêu chảy theo cơ chế êm dịu – phục hồi hàng rào niêm mạc và làm lành biểu mô – giúp bình thường hóa phân thay vì ép chậm nhu động. Nhờ vậy ít nguy cơ chuyển pha táo bón hơn so với thuốc cầm tiêu chảy tác động trực tiếp lên vận động ruột.",
+   "nhom": "an-toan",
+   "bien_the": [
+    "Gelsectan có gây táo bón không",
+    "uống Gelsectan có bị táo bón không",
+    "cầm tiêu chảy xong có bị táo không",
+    "có bị chuyển sang táo bón không",
+    "Gelsectan có làm chậm nhu động ruột không"
+   ],
+   "doc": "Gen-séc-tan giảm tiêu chảy theo cơ chế êm dịu, phục hồi hàng rào niêm mạc và làm lành biểu mô, giúp bình thường hóa phân thay vì ép chậm nhu động. Nhờ vậy ít nguy cơ chuyển pha táo bón hơn so với thuốc cầm tiêu chảy tác động trực tiếp lên vận động ruột.",
+   "hoi_doc": "Gen-séc-tan có gây táo bón khi cầm tiêu chảy không?",
+   "giay": 16.9
+  },
+  {
+   "id": "0.22",
+   "hoi": "Gelsectan có nghiên cứu lâm sàng chứng minh không?",
+   "dap": "Có. Gelsectan có thử nghiệm lâm sàng ngẫu nhiên mù đôi bắt chéo đối chứng giả dược (Trifan 2019), nghiên cứu dài hạn 6 tháng (de los Rios 2021), và nghiên cứu trên thể sau nhiễm trùng (Viazis 2025). Sản phẩm cũng được ghi nhận trong hướng dẫn điều trị của nhiều nước châu Âu.",
+   "nhom": "bang-chung",
+   "bien_the": [
+    "Gelsectan có nghiên cứu lâm sàng không",
+    "bằng chứng lâm sàng của Gelsectan",
+    "có thử nghiệm lâm sàng nào chứng minh",
+    "Gelsectan có bằng chứng khoa học không",
+    "có dữ liệu nghiên cứu nào",
+    "nghiên cứu nào chứng minh hiệu quả",
+    "có trong hướng dẫn điều trị không"
+   ],
+   "doc": "Có. Gen-séc-tan có thử nghiệm lâm sàng ngẫu nhiên mù đôi bắt chéo đối chứng giả dược của tác giả Tri-phan, năm hai nghìn không trăm mười chín, nghiên cứu dài hạn sáu tháng của tác giả Đê lốt Ri-ốt, năm hai nghìn không trăm hai mươi mốt, và nghiên cứu trên thể sau nhiễm trùng của tác giả Vi-a-dít, năm hai nghìn không trăm hai mươi lăm. Sản phẩm cũng được ghi nhận trong hướng dẫn điều trị của nhiều nước châu Âu.",
+   "hoi_doc": "Gen-séc-tan có nghiên cứu lâm sàng chứng minh không?",
+   "giay": 27.5
+  },
+  {
+   "id": "0.23",
+   "hoi": "Vì sao nên chọn Gelsectan thay vì loperamide?",
+   "dap": "Loperamide cầm tiêu chảy bằng cách làm chậm nhu động, dễ gây chuyển pha sang táo bón. Gelsectan tác động vào cơ chế nền – rối loạn hàng rào và tăng tính thấm niêm mạc – giúp giảm tiêu chảy êm dịu nhờ phục hồi và làm lành niêm mạc. Hai cơ chế có thể bổ sung nhau.",
+   "nhom": "bang-chung",
+   "bien_the": [
+    "Gelsectan khác gì loperamide",
+    "so sánh Gelsectan với loperamide",
+    "tại sao dùng Gelsectan mà không dùng loperamide",
+    "Gelsectan có gì hơn thuốc cầm tiêu chảy",
+    "ưu điểm so với loperamide",
+    "dùng chung với loperamide được không",
+    "Gelsectan hơn loperamide ở điểm nào"
+   ],
+   "doc": "Lô-pê-ra-mít cầm tiêu chảy bằng cách làm chậm nhu động, dễ gây chuyển pha sang táo bón. Gen-séc-tan tác động vào cơ chế nền, rối loạn hàng rào và tăng tính thấm niêm mạc, giúp giảm tiêu chảy êm dịu nhờ phục hồi và làm lành niêm mạc. Hai cơ chế có thể bổ sung nhau.",
+   "hoi_doc": "Vì sao nên chọn Gen-séc-tan thay vì lô-pê-ra-mít?",
+   "giay": 17.6
+  },
+  {
+   "id": "0.24",
+   "hoi": "Gelsectan dùng cho hội chứng ruột kích thích thể tiêu chảy và thể sau nhiễm trùng đúng không?",
+   "dap": "Đúng ạ. Gelsectan là lựa chọn cho cả hội chứng ruột kích thích thể tiêu chảy và hội chứng ruột kích thích sau nhiễm trùng – hai thể có tỷ lệ rối loạn hàng rào và tăng tính thấm niêm mạc cao nhất, đúng cơ chế mà Gelsectan tác động.",
+   "nhom": "bang-chung",
+   "bien_the": [
+    "Gelsectan dùng cho thể tiêu chảy phải không",
+    "hội chứng ruột kích thích sau nhiễm trùng dùng được không",
+    "Gelsectan dùng cho thể nào của hội chứng ruột kích thích",
+    "ruột kích thích thể tiêu chảy có dùng được không",
+    "thể sau nhiễm trùng dùng Gelsectan được không"
+   ],
+   "doc": "Đúng ạ. Gen-séc-tan là lựa chọn cho cả hội chứng ruột kích thích thể tiêu chảy và hội chứng ruột kích thích sau nhiễm trùng, hai thể có tỷ lệ rối loạn hàng rào và tăng tính thấm niêm mạc cao nhất, đúng cơ chế mà Gen-séc-tan tác động.",
+   "hoi_doc": "Gen-séc-tan dùng cho hội chứng ruột kích thích thể tiêu chảy và thể sau nhiễm trùng đúng không?",
+   "giay": 15.5
+  },
+  {
+   "id": "0.25",
+   "hoi": "Gelsectan đã có tại Việt Nam chưa?",
+   "dap": "Gelsectan đã có mặt tại Việt Nam, do Chi Bách Pharma phân phối độc quyền, và hiện đã trúng thầu tại nhiều bệnh viện trong nhóm thiết bị y tế. Kính mời Bác sĩ ghé quầy Chi Bách Pharma để biết thêm thông tin chi tiết ạ.",
+   "nhom": "tong-quan",
+   "bien_the": [
+    "Gelsectan có ở Việt Nam chưa",
+    "ở Việt Nam đã có Gelsectan chưa",
+    "Gelsectan đã về Việt Nam chưa",
+    "bệnh viện nào có Gelsectan",
+    "Gelsectan đã trúng thầu chưa",
+    "sản phẩm có trong bệnh viện chưa"
+   ],
+   "doc": "Gen-séc-tan đã có mặt tại Việt Nam, do Chi Bách Phác-ma phân phối độc quyền, và hiện đã trúng thầu tại nhiều bệnh viện trong nhóm thiết bị y tế. Kính mời Bác sĩ ghé quầy Chi Bách Phác-ma để biết thêm thông tin chi tiết ạ.",
+   "hoi_doc": "Gen-séc-tan đã có tại Việt Nam chưa?",
+   "giay": 14.7
+  }
+ ],
+ "cau_mau": [
+  "0.1",
+  "0.3",
+  "0.6",
+  "0.10",
+  "0.19",
+  "0.22",
+  "0.9",
+  "0.13",
+  "0.25"
+ ],
+ "loi": {
+  "chao": {
+   "hien": "Xin chào anh chị! Em là robot của Chi Bách Pharma. Anh chị muốn tìm hiểu về Gelsectan, mời chạm vào một mục trên màn hình ạ.",
+   "doc": "Xin chào anh chị! Em là robot của Chi Bách Phác-ma. Anh chị muốn tìm hiểu về Gen-séc-tan, mời chạm vào một mục trên màn hình ạ."
+  },
+  "chao_tra_cuu": {
+   "hien": "Mời anh chị chạm vào câu hỏi mình quan tâm, em sẽ đọc phần giải đáp ạ.",
+   "doc": "Mời anh chị chạm vào câu hỏi mình quan tâm, em sẽ đọc phần giải đáp ạ."
+  },
+  "chao_ai_mic": {
+   "hien": "Anh chị muốn hỏi gì về Gelsectan, bấm nút micro bên dưới rồi nói với em ạ.",
+   "doc": "Anh chị muốn hỏi gì về Gen-séc-tan, bấm nút micro bên dưới rồi nói với em ạ."
+  },
+  "chao_ai_cham": {
+   "hien": "Anh chị chạm vào một câu hỏi bên dưới để hỏi em ạ.",
+   "doc": "Anh chị chạm vào một câu hỏi bên dưới để hỏi em ạ."
+  },
+  "moi_de_lai": {
+   "hien": "Nếu anh chị muốn tìm hiểu thêm về sản phẩm, vui lòng để lại thông tin để bên em tư vấn chi tiết hơn.",
+   "doc": "Nếu anh chị muốn tìm hiểu thêm về sản phẩm, vui lòng để lại thông tin để bên em tư vấn chi tiết hơn."
+  },
+  "form_mo": {
+   "hien": "Nếu anh chị muốn tìm hiểu thêm về sản phẩm, vui lòng để lại thông tin để bên em tư vấn chi tiết hơn.",
+   "doc": "Nếu anh chị muốn tìm hiểu thêm về sản phẩm, vui lòng để lại thông tin để bên em tư vấn chi tiết hơn."
+  },
+  "form_loi": {
+   "hien": "Anh chị kiểm tra lại giúp em ô được đánh dấu ạ.",
+   "doc": "Anh chị kiểm tra lại giúp em ô được đánh dấu ạ."
+  },
+  "cam_on": {
+   "hien": "Em cảm ơn anh chị. Chi Bách Pharma sẽ liên hệ để tư vấn chi tiết hơn ạ.",
+   "doc": "Em cảm ơn anh chị. Chi Bách Phác-ma sẽ liên hệ để tư vấn chi tiết hơn ạ."
+  },
+  "chua_luu": {
+   "hien": "Em chưa lưu được thông tin. Nhờ anh chị báo nhân viên tại quầy giúp em ạ.",
+   "doc": "Em chưa lưu được thông tin. Nhờ anh chị báo nhân viên tại quầy giúp em ạ."
+  },
+  "khan_cap": {
+   "hien": "Có người cần giúp gấp. Nhờ mọi người hỗ trợ ngay. Nếu cần cấp cứu, xin gọi số một một năm. Em là robot, em không sơ cứu được.",
+   "doc": "Có người cần giúp gấp. Nhờ mọi người hỗ trợ ngay. Nếu cần cấp cứu, xin gọi số một một năm. Em là robot, em không sơ cứu được."
+  },
+  "ca_nhan": {
+   "hien": "Em là robot giới thiệu thông tin sản phẩm nên không tư vấn điều trị cho trường hợp cụ thể được ạ. Anh chị vui lòng hỏi ý kiến bác sĩ điều trị, hoặc trao đổi với chuyên viên Medical tại quầy Chi Bách Pharma ạ.",
+   "doc": "Em là robot giới thiệu thông tin sản phẩm nên không tư vấn điều trị cho trường hợp cụ thể được ạ. Anh chị vui lòng hỏi ý kiến bác sĩ điều trị, hoặc trao đổi với chuyên viên Mê-đi-cồ tại quầy Chi Bách Phác-ma ạ."
+  },
+  "gia": {
+   "hien": "Em chưa có thông tin về giá và điểm bán ạ. Kính mời anh chị ghé quầy Chi Bách Pharma, hoặc để lại thông tin để được tư vấn chi tiết hơn.",
+   "doc": "Em chưa có thông tin về giá và điểm bán ạ. Kính mời anh chị ghé quầy Chi Bách Phác-ma, hoặc để lại thông tin để được tư vấn chi tiết hơn."
+  },
+  "chua_khoi": {
+   "hien": "Gelsectan là thiết bị y tế, hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích. Chi tiết xin mời anh chị tham khảo tờ hướng dẫn sử dụng, hoặc trao đổi với chuyên viên Medical ạ.",
+   "doc": "Gen-séc-tan là thiết bị y tế, hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích. Chi tiết xin mời anh chị tham khảo tờ hướng dẫn sử dụng, hoặc trao đổi với chuyên viên Mê-đi-cồ ạ."
+  },
+  "chinh_tri": {
+   "hien": "Câu này nằm ngoài phạm vi của em ạ. Em chỉ giới thiệu thông tin về Gelsectan thôi.",
+   "doc": "Câu này nằm ngoài phạm vi của em ạ. Em chỉ giới thiệu thông tin về Gen-séc-tan thôi."
+  },
+  "chua_co": {
+   "hien": "Nội dung này em chưa có trong dữ liệu nên không dám trả lời ạ. Kính mời anh chị trao đổi với chuyên viên Medical tại quầy Chi Bách Pharma, hoặc để lại thông tin để được tư vấn chi tiết hơn.",
+   "doc": "Nội dung này em chưa có trong dữ liệu nên không dám trả lời ạ. Kính mời anh chị trao đổi với chuyên viên Mê-đi-cồ tại quầy Chi Bách Phác-ma, hoặc để lại thông tin để được tư vấn chi tiết hơn."
+  },
+  "goi_y": {
+   "hien": "Em chưa chắc mình hiểu đúng câu hỏi. Anh chị chạm vào câu gần nhất với ý mình trên màn hình giúp em ạ.",
+   "doc": "Em chưa chắc mình hiểu đúng câu hỏi. Anh chị chạm vào câu gần nhất với ý mình trên màn hình giúp em ạ."
+  },
+  "xg_chao": {
+   "hien": "Em chào anh chị ạ! Em là robot của Chi Bách Pharma. Anh chị muốn biết gì về Gelsectan cứ hỏi em nhé.",
+   "doc": "Em chào anh chị ạ! Em là robot của Chi Bách Phác-ma. Anh chị muốn biết gì về Gen-séc-tan cứ hỏi em nhé."
+  },
+  "xg_ten": {
+   "hien": "Em là robot của Chi Bách Pharma, em giới thiệu thông tin về Gelsectan ạ.",
+   "doc": "Em là robot của Chi Bách Phác-ma, em giới thiệu thông tin về Gen-séc-tan ạ."
+  },
+  "xg_cam_on": {
+   "hien": "Dạ không có gì ạ. Anh chị cần hỏi thêm gì về Gelsectan cứ hỏi em nhé.",
+   "doc": "Dạ không có gì ạ. Anh chị cần hỏi thêm gì về Gen-séc-tan cứ hỏi em nhé."
+  },
+  "xg_tam_biet": {
+   "hien": "Em chào anh chị. Chúc anh chị một ngày tốt lành ạ.",
+   "doc": "Em chào anh chị. Chúc anh chị một ngày tốt lành ạ."
+  },
+  "dh_bat_dau": {
+   "hien": "Em bắt đầu đi một vòng ạ. Anh chị cần xem thông tin, cứ chạm vào màn hình của em nhé.",
+   "doc": "Em bắt đầu đi một vòng ạ. Anh chị cần xem thông tin, cứ chạm vào màn hình của em nhé."
+  },
+  "lt_bat_dau": {
+   "hien": "Em về vị trí lễ tân ạ.",
+   "doc": "Em về vị trí lễ tân ạ."
+  },
+  "khong_di_duoc": {
+   "hien": "Em chưa tự di chuyển được. Nhờ nhân viên kỹ thuật kiểm tra giúp em ạ.",
+   "doc": "Em chưa tự di chuyển được. Nhờ nhân viên kỹ thuật kiểm tra giúp em ạ."
+  },
+  "cam_on_nhay": {
+   "hien": "Em cảm ơn anh chị đã xem em nhảy ạ! Anh chị muốn tìm hiểu về Gelsectan, cứ chạm vào màn hình nhé.",
+   "doc": "Em cảm ơn anh chị đã xem em nhảy ạ! Anh chị muốn tìm hiểu về Gen-séc-tan, cứ chạm vào màn hình nhé."
+  }
+ },
+ "du_hanh": {
+  "diem": [
+   "Diem 1",
+   "Diem 2",
+   "Diem 3",
+   "Diem 4",
+   "Diem 5"
+  ],
+  "nghi_giay": 22,
+  "cau": [
+   {
+    "hien": "Xin chào quý vị! Em là robot của Chi Bách Pharma. Mời quý vị chạm vào màn hình để tìm hiểu về Gelsectan ạ.",
+    "doc": "Xin chào quý vị! Em là robot của Chi Bách Phác-ma. Mời quý vị chạm vào màn hình để tìm hiểu về Gen-séc-tan ạ."
+   },
+   {
+    "hien": "Gelsectan là thiết bị y tế, tạo lớp màng bảo vệ trên niêm mạc ruột. Mời anh chị chạm vào màn hình để xem thông tin ạ.",
+    "doc": "Gen-séc-tan là thiết bị y tế, tạo lớp màng bảo vệ trên niêm mạc ruột. Mời anh chị chạm vào màn hình để xem thông tin ạ."
+   },
+   {
+    "hien": "Gelsectan hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích. Anh chị muốn biết thêm, cứ chạm vào màn hình của em nhé.",
+    "doc": "Gen-séc-tan hỗ trợ kiểm soát triệu chứng của hội chứng ruột kích thích. Anh chị muốn biết thêm, cứ chạm vào màn hình của em nhé."
+   },
+   {
+    "hien": "Gelsectan được sản xuất tại Ý, do Chi Bách Pharma phân phối độc quyền tại Việt Nam. Mời anh chị chạm vào màn hình để tìm hiểu ạ.",
+    "doc": "Gen-séc-tan được sản xuất tại Ý, do Chi Bách Phác-ma phân phối độc quyền tại Việt Nam. Mời anh chị chạm vào màn hình để tìm hiểu ạ."
+   },
+   {
+    "hien": "Anh chị có câu hỏi về Gelsectan? Chạm vào màn hình, em sẽ giải đáp ngay ạ.",
+    "doc": "Anh chị có câu hỏi về Gen-séc-tan? Chạm vào màn hình, em sẽ giải đáp ngay ạ."
+   },
+   {
+    "hien": "Kính mời quý vị ghé quầy Chi Bách Pharma để biết thêm thông tin chi tiết về Gelsectan ạ.",
+    "doc": "Kính mời quý vị ghé quầy Chi Bách Phác-ma để biết thêm thông tin chi tiết về Gen-séc-tan ạ."
+   }
+  ]
+ },
+ "le_tan": {
+  "diem": "Le tan",
+  "nghi_giay": 25,
+  "cau": [
+   {
+    "hien": "Xin chào quý vị! Em là robot của Chi Bách Pharma. Mời quý vị chạm vào màn hình để tìm hiểu về Gelsectan ạ.",
+    "doc": "Xin chào quý vị! Em là robot của Chi Bách Phác-ma. Mời quý vị chạm vào màn hình để tìm hiểu về Gen-séc-tan ạ."
+   },
+   {
+    "hien": "Anh chị có câu hỏi về Gelsectan? Mời chạm vào màn hình, em sẽ giải đáp ạ.",
+    "doc": "Anh chị có câu hỏi về Gen-séc-tan? Mời chạm vào màn hình, em sẽ giải đáp ạ."
+   },
+   {
+    "hien": "Gelsectan là thiết bị y tế, tạo lớp màng bảo vệ trên niêm mạc ruột. Mời anh chị chạm vào màn hình để xem thông tin ạ.",
+    "doc": "Gen-séc-tan là thiết bị y tế, tạo lớp màng bảo vệ trên niêm mạc ruột. Mời anh chị chạm vào màn hình để xem thông tin ạ."
+   },
+   {
+    "hien": "Mời anh chị chạm vào màn hình để trò chuyện với em về Gelsectan ạ.",
+    "doc": "Mời anh chị chạm vào màn hình để trò chuyện với em về Gen-séc-tan ạ."
+   }
+  ]
+ },
+ "form": [
+  {
+   "ma": "ten",
+   "nhan": "Họ và tên",
+   "bat": true,
+   "kieu": "chu",
+   "hoa": true,
+   "goi": "Ví dụ: Nguyễn Văn An"
+  },
+  {
+   "ma": "sdt",
+   "nhan": "Số điện thoại",
+   "bat": true,
+   "kieu": "so",
+   "hoa": false,
+   "goi": "Ví dụ: 0912 345 678"
+  },
+  {
+   "ma": "chuc_vu",
+   "nhan": "Chức vụ",
+   "bat": false,
+   "kieu": "chu",
+   "hoa": "dau",
+   "goi": "Ví dụ: Bác sĩ, Dược sĩ, Trưởng khoa"
+  },
+  {
+   "ma": "don_vi",
+   "nhan": "Tên doanh nghiệp / đơn vị",
+   "bat": false,
+   "kieu": "chu",
+   "hoa": "dau",
+   "goi": "Ví dụ: Bệnh viện, nhà thuốc, công ty"
+  }
+ ],
+ "cho_ve_giay": 60,
+ "cho_ve_form_giay": 150,
+ "ten_doc": "Gen-séc-tan",
+ "cau_la_gi": "0.1",
+ "cau_cong_dung": "0.3",
+ "bi_danh_ten": [
+  {
+   "cum": "your second time tu",
+   "dau": false
+  },
+  {
+   "cum": "your second time",
+   "dau": false
+  },
+  {
+   "cum": "second time tu",
+   "dau": false
+  },
+  {
+   "cum": "your second",
+   "dau": true
+  },
+  {
+   "cum": "gentlemen",
+   "dau": true
+  },
+  {
+   "cum": "gentle",
+   "dau": true
+  },
+  {
+   "cum": "gentel",
+   "dau": true
+  },
+  {
+   "cum": "translate",
+   "dau": true
+  },
+  {
+   "cum": "translation",
+   "dau": true
+  },
+  {
+   "cum": "gen z",
+   "dau": true
+  },
+  {
+   "cum": "gen zet",
+   "dau": true
+  },
+  {
+   "cum": "sex tu",
+   "dau": false
+  },
+  {
+   "cum": "sex tan",
+   "dau": false
+  },
+  {
+   "cum": "sec tu",
+   "dau": false
+  },
+  {
+   "cum": "danh sach an",
+   "dau": true
+  },
+  {
+   "cum": "danh sach ta",
+   "dau": true
+  },
+  {
+   "cum": "danh sach",
+   "dau": true
+  },
+  {
+   "cum": "settle",
+   "dau": true
+  },
+  {
+   "cum": "jessica tan",
+   "dau": false
+  },
+  {
+   "cum": "gel sec tan",
+   "dau": false
+  }
+ ]
+};
+</script>
+<script>
+/* ══════════════════════════════════════════════════════════════════════════
+   ROBOT GELSECTAN — Minibot · Chi Bách Pharma (dựng 30/09/2026)
+
+   Màn biểu cảm (chờ) → chạm → lời chào + robot xoay theo người → MÀN CHÍNH bốn chế độ:
+     Tra cứu      chỉ chạm; chọn câu hỏi là robot đọc phần giải đáp NGUYÊN VĂN của khách
+     Giao tiếp AI hỏi bằng giọng; câu trùng bộ câu hỏi → đọc nguyên văn; ngoài bộ → AgentOS + Portal
+     Du hành      đi vòng Diem 1..5 không dừng, vừa đi vừa giới thiệu, màn hình chiếu biểu cảm
+     Lễ tân       đứng ở điểm "Le tan", chiếu biểu cảm, đều đặn mời khách chạm màn hình
+   Rời Tra cứu / Giao tiếp AI về màn chính → bật bảng mời để lại thông tin (bỏ qua được).
+   Vắng thao tác 60 giây → về màn biểu cảm và LÀM TIẾP chế độ nền (du hành / lễ tân).
+
+   App KHÔNG biên tập nội dung y tế. Mọi câu do app soạn nằm ở D.loi / D.du_hanh / D.le_tan
+   (dung-du-lieu.py) để khách duyệt một chỗ.
+   ══════════════════════════════════════════════════════════════════════════ */
+var D = window.DU_LIEU || {};
+var CAU_HOI = D.cau || [];
+var THEO_ID = {};
+CAU_HOI.forEach(function(c){ THEO_ID[c.id] = c; });
+var L = D.loi || {};
+function $(s){ return document.querySelector(s); }
+function $$(s){ return Array.prototype.slice.call(document.querySelectorAll(s)); }
+function thoat(s){ return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+var manDang = 'mh-cho';
+/** Chế độ NỀN — việc robot làm khi màn biểu cảm đang hiện: 'cho' đứng yên · 'du-hanh' · 'le-tan'. */
+var nen = 'cho';
+
+/* ⚠ KHÔNG đặt tên biến nào là CAU — nó sẽ ĐÈ MẤT cây cầu addJavascriptInterface (window.CAU):
+   robot nhận lệnh xong đứng im, không lỗi không log (dính ở app giao hàng Bella 08/09/2026). */
+function coCau(){ try{ return typeof CAU !== 'undefined' && !!CAU; }catch(e){ return false; } }
+
+/* ─────────── Tiếng nói — MỘT cửa ra ─────────── */
+var lucNoiCuoi = 0;
+/** Ước lượng giọng máy đọc bao nhiêu ký tự một giây — để biết câu đang đọc còn bao lâu nữa thì dứt.
+    CHƯA đo trên Minibot; lệch thì chỉ làm khoảng nghỉ giữa hai câu mời dài/ngắn đi một chút. */
+var TOC_DO_DOC = 13;
+/** o = {hien, doc} hoặc chuỗi. Robot đọc bản `doc` (số viết chữ, tên riêng phiên âm). */
+function chuDoc(o){ return !o ? '' : (typeof o === 'string' ? o : (o.doc || o.hien || '')); }
+function chuHien(o){ return !o ? '' : (typeof o === 'string' ? o : (o.hien || '')); }
+function doc(o){
+  var t = chuDoc(o);
+  if(!t) return;
+  lucNoiCuoi = Date.now();
+  henVeCho(t.length / TOC_DO_DOC * 1000);          // đang đọc thì chưa tính là "vắng thao tác"
+  if(coCau()) try{ CAU.doc(t); }catch(e){}
+}
+function dungDoc(){ if(coCau()) try{ CAU.dungDoc(); }catch(e){} }
+
+/**
+ * THAO TÁC LÀ NGẮT LỜI — và cắt tiếng một mình KHÔNG đủ: câu trả lời của AI có thể còn đang
+ * trên đường về. CAU.nguoiDungThaoTac() hạ cờ nhận câu bên Kotlin + cắt cả hai đường tiếng.
+ */
+function thaoTac(){
+  clearTimeout(henChao);
+  dungDoc();
+  if(coCau() && CAU.nguoiDungThaoTac) try{ CAU.nguoiDungThaoTac(); }catch(e){}
+}
+
+/* Đọc TRỄ một nhịp: ve() vừa cắt tiếng, lệnh cắt chạy bất đồng bộ — phát ngay là bị nuốt. */
+var henChao = null;
+function docSau(o, ms){
+  clearTimeout(henChao);
+  var man = manDang;
+  henChao = setTimeout(function(){ if(manDang === man) doc(o); }, ms || 400);
+}
+
+/** MỌI đường đổi màn đi qua đây — nên mọi đường đều cắt tiếng ngay. */
+function ve(m){
+  thaoTac();
+  /* Rời màn nhảy giữa chừng → dừng điệu; nếu không về màn chờ thì bật lại xoay theo người (lúc nhảy đã nhả gầm máy). */
+  if(manDang === 'mh-mua' && m !== 'mh-mua'){
+    dungNhay(false, false);
+    if(m !== 'mh-cho' && coCau() && CAU.batDoiDien) try{ CAU.batDoiDien(); }catch(e){}
+  }
+  if(coCau()){
+    try{
+      /* Rời màn biểu cảm → robot xoay đối diện người đang thao tác và giữ hướng theo họ.
+         Về màn biểu cảm → thôi theo; chỉ xoay về hướng cũ khi đang đứng yên (chế độ 'cho'). */
+      if(manDang === 'mh-cho' && m !== 'mh-cho' && CAU.batDoiDien) CAU.batDoiDien();
+      if(manDang !== 'mh-cho' && m === 'mh-cho' && CAU.tatDoiDien) CAU.tatDoiDien(nen === 'cho');
+    }catch(e){}
+  }
+  if(manDang === 'mh-chat' && m !== 'mh-chat') ketThucPhien();
+  $$('.man-hinh').forEach(function(o){ o.classList.toggle('hien', o.id === m); });
+  manDang = m;
+  if(coCau() && CAU.baoManHinh) try{ CAU.baoManHinh(m); }catch(e){}
+  if(m === 'mh-chinh') veManChinh();
+  henVeCho();
+}
+
+/* ─────────── Màn biểu cảm → màn chính ─────────── */
+function batDau(){
+  if(manDang !== 'mh-cho') return;
+  dungNen();
+  khachMoi();
+  ve('mh-chinh');
+  docSau(L.chao, 450);
+}
+/** Robot nghe thấy "Xin chào" lúc đang ở màn biểu cảm. Bỏ qua nếu chính robot vừa nói
+    (câu mời lúc du hành cũng mở đầu bằng "Xin chào" — không để robot tự đánh thức mình). */
+window.danhThucBangLoiChao = function(){
+  if(manDang !== 'mh-cho' || Date.now() - lucNoiCuoi < 9000) return;
+  batDau();
+};
+
+var daDeLai = false, daBoQua = false;
+function khachMoi(){ daDeLai = false; daBoQua = false; cauDang = null; }
+
+/** Về màn biểu cảm và LÀM TIẾP chế độ nền. */
+function veManCho(){
+  dongMoiLop();
+  hienLoiThoai('—', false);
+  ve('mh-cho');
+  batNen();
+}
+/** Về màn chính. Rời Tra cứu / Giao tiếp AI thì bật bảng mời để lại thông tin — một lần mỗi lượt khách. */
+function veTrangChu(){
+  var tuCheDo = manDang === 'mh-tra-cuu' || manDang === 'mh-chat';
+  if(tuCheDo && !daDeLai && !daBoQua){ moForm(function(){ ve('mh-chinh'); }); return; }
+  ve('mh-chinh');
+}
+function dongMoiLop(){ clearTimeout(henDongForm); $$('.phu').forEach(function(o){ o.classList.remove('hien'); }); formDangMo = false; sauForm = null; }
+
+/* Vắng thao tác → về màn biểu cảm (và đi tiếp nếu đang du hành). Mặc định 60 giây. */
+var henVe = null;
+function henVeCho(themMs){
+  clearTimeout(henVe);
+  if(manDang === 'mh-cho' || dangNhay) return;
+  var giay = formDangMo ? (D.cho_ve_form_giay || 150) : (D.cho_ve_giay || 60);
+  henVe = setTimeout(veManCho, giay * 1000 + (themMs || 0));
+}
+['touchstart', 'mousedown', 'keydown'].forEach(function(e){ document.addEventListener(e, function(){ henVeCho(); }, true); });
+
+function baoLoi(chu){
+  var h = $('#hop-bao'); h.textContent = chu; h.classList.add('hien');
+  clearTimeout(baoLoi._h); baoLoi._h = setTimeout(function(){ h.classList.remove('hien'); }, 5000);
+}
+
+/* ─────────── Biểu tượng đơn sắc ─────────── */
+var HINH = {
+  'tra-cuu':  '<circle cx="10.5" cy="10.5" r="6"/><path d="m20 20-5.2-5.2"/>',
+  'ai':       '<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/>',
+  'du-hanh':  '<circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="6" r="2.2"/><path d="M8.2 18H15a3 3 0 0 0 0-6H9a3 3 0 0 1 0-6h6.8"/>',
+  'le-tan':   '<circle cx="12" cy="7" r="3.2"/><path d="M5 21c0-4 3-7 7-7s7 3 7 7"/><path d="M18.5 3.5l1 1.6 1.8.3-1.3 1.3.3 1.8-1.8-.9-1.6.9.3-1.8-1.3-1.3 1.8-.3z"/>',
+  'xong':     '<path d="m5 12.5 4.5 4.5L19 7.5"/>',
+  'nhay':     '<circle cx="12" cy="4.5" r="2"/><path d="M12 7v6l-3 7"/><path d="m12 13 3.5 6.5"/><path d="M5.5 9.5 12 8l6 -3"/>'
+};
+function icon(khoa, co){
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" ' +
+         'stroke-linejoin="round" style="width:' + co + 'rem;height:' + co + 'rem;display:block">' + (HINH[khoa] || '') + '</svg>';
+}
+
+/* ─────────── Màn chính ─────────── */
+function veManChinh(){
+  $('#nhan-dh').hidden = nen !== 'du-hanh';
+  $('#nhan-lt').hidden = nen !== 'le-tan';
+  $('#chinh-tt').innerHTML = nen === 'du-hanh' ? 'Chế độ nền: <b>Du hành</b> — vắng thao tác ' + (D.cho_ve_giay || 60) + ' giây robot sẽ đi tiếp'
+    : nen === 'le-tan' ? 'Chế độ nền: <b>Lễ tân</b> — vắng thao tác ' + (D.cho_ve_giay || 60) + ' giây robot sẽ tiếp tục mời khách' : '';
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   TRA CỨU — chỉ chạm. Trái: 25 câu hỏi chia 6 nhóm. Phải: phần giải đáp, robot đọc.
+   Chọn câu khác / bấm nút nào cũng CẮT TIẾNG NGAY (mọi đường đều qua thaoTac).
+   ══════════════════════════════════════════════════════════════════════════ */
+var cauDang = null, dangDocTC = false;
+function veDanhSach(){
+  var o = $('#tc-ds'); o.innerHTML = '';
+  var stt = 0;
+  (D.nhom || []).forEach(function(n){
+    var ds = CAU_HOI.filter(function(c){ return c.nhom === n.ma; });
+    if(!ds.length) return;
+    var h = document.createElement('div'); h.className = 'tieu-muc'; h.textContent = n.ten; o.appendChild(h);
+    ds.forEach(function(c){
+      stt++;
+      var b = document.createElement('button'); b.className = 'cau-hoi'; b.setAttribute('data-id', c.id);
+      b.innerHTML = '<span class="stt">' + stt + '</span><span class="chu"></span>';
+      b.querySelector('.chu').textContent = c.hoi;
+      b.onclick = function(){ chonCau(c.id); };
+      o.appendChild(b);
+    });
+  });
+  $('#tc-phu').textContent = CAU_HOI.length + ' câu hỏi thường gặp · chạm vào câu anh chị quan tâm';
+}
+/** Thứ tự câu trên màn hình (theo nhóm), để nút Câu trước / Câu sau đi đúng thứ tự đang nhìn. */
+function thuTuHien(){
+  var ra = [];
+  (D.nhom || []).forEach(function(n){ CAU_HOI.forEach(function(c){ if(c.nhom === n.ma) ra.push(c.id); }); });
+  return ra;
+}
+function moTraCuu(){
+  ve('mh-tra-cuu');
+  $('#tc-ds').scrollTop = 0;
+  boChonCau();
+  docSau(L.chao_tra_cuu, 450);
+}
+function boChonCau(){
+  cauDang = null;
+  $$('#tc-ds .cau-hoi').forEach(function(b){ b.classList.remove('chon'); });
+  $('#tc-trong').hidden = false; $('#tc-hoi').hidden = true; $('#tc-dap').hidden = true; $('#tc-nut').hidden = true;
+}
+function coChuTuCo(o, khung, coDau, coNho){
+  var co = coDau, vong = 0;
+  o.style.fontSize = co + 'rem';
+  while(co > coNho && o.scrollHeight > khung.clientHeight && vong++ < 50){
+    co = Math.round((co - 0.1) * 100) / 100;
+    o.style.fontSize = co + 'rem';
+  }
+}
+function chonCau(id, khongDoc){
+  var c = THEO_ID[id]; if(!c) return;
+  thaoTac();                                   // cắt câu đang đọc NGAY
+  cauDang = c;
+  $$('#tc-ds .cau-hoi').forEach(function(b){
+    var la = b.getAttribute('data-id') === id;
+    b.classList.toggle('chon', la);
+    if(la){
+      var khung = $('#tc-ds'), tren = b.offsetTop - khung.offsetTop;
+      if(tren < khung.scrollTop || tren + b.offsetHeight > khung.scrollTop + khung.clientHeight) khung.scrollTop = Math.max(0, tren - 120);
+    }
+  });
+  var n = null; (D.nhom || []).forEach(function(x){ if(x.ma === c.nhom) n = x; });
+  $('#tc-trong').hidden = true; $('#tc-hoi').hidden = false; $('#tc-dap').hidden = false; $('#tc-nut').hidden = false;
+  $('#tc-nhom').textContent = n ? n.ten : '';
+  $('#tc-hoi-chu').textContent = c.hoi;
+  $('#tc-dap-chu').textContent = c.dap;
+  coChuTuCo($('#tc-dap-chu'), $('#tc-dap'), 2.3, 1.3);
+  if(!khongDoc){ datDangDocTC(true); docSau(c, 350); }
+}
+var lucXinDocTC = 0;
+function datDangDocTC(dang){ dangDocTC = dang; if(dang) lucXinDocTC = Date.now(); $('#tc-nut-doc').textContent = dang ? 'Dừng đọc' : 'Nghe lại'; }
+function docLaiTraCuu(){
+  if(!cauDang) return;
+  if(dangDocTC){ thaoTac(); datDangDocTC(false); return; }
+  thaoTac(); datDangDocTC(true); docSau(cauDang, 300);
+}
+function cauKe(buoc){
+  var ds = thuTuHien(); if(!ds.length) return;
+  var i = cauDang ? ds.indexOf(cauDang.id) : -1;
+  chonCau(ds[((i + buoc) % ds.length + ds.length) % ds.length]);
+}
+
+/*__BAT_DAU_BO_TIM__*/
+/* ══════════════════════════════════════════════════════════════════════════
+   BỘ HIỂU CÂU HỎI — chạy HOÀN TOÀN trong máy, không hỏi mô hình.
+
+   Khách từng dùng giải pháp khác và gặp chuyện "hỏi đúng nội dung trong bộ câu hỏi mà robot
+   trả lời không đúng trọng tâm". Nên ở app này câu nào NẰM TRONG bộ câu hỏi thì:
+     ① bộ tìm dưới đây nhận ra (kể cả khi diễn đạt khác — nhờ bảng BIEN_THE trong dữ liệu)
+     ② robot đọc NGUYÊN VĂN câu trả lời khách đã duyệt — mô hình không được diễn đạt lại.
+   AI (AgentOS + Portal) chỉ nhận những câu bộ tìm KHÔNG chắc.
+
+   Ba mức:  CHẮC → đọc nguyên văn · CHƯA CHẮC → hiện 2-3 câu gần nhất cho khách chạm ·
+            KHÔNG THẤY → AI trả lời, hoặc nói thẳng "em chưa có".
+   Ngưỡng TUYỆT ĐỐI + khoảng cách với câu đứng nhì: thiếu một trong hai là bộ tìm không bao
+   giờ biết nói "không biết", và đọc nhầm câu 0.12 cho người hỏi câu 0.13.
+
+   Sửa khối này hoặc bảng BIEN_THE xong PHẢI chạy: node tools/thu-tim-kiem.mjs
+   Bộ thử BÓC NGUYÊN khối giữa hai mốc BAT_DAU_BO_TIM / HET_BO_TIM nên thử đúng bản chạy trên robot.
+   ══════════════════════════════════════════════════════════════════════════ */
+function chuanCau(s){
+  s = String(s || '').toLowerCase();
+  if(s.normalize) s = s.normalize('NFC');
+  return s.replace(/[^a-z0-9àáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ]+/g, ' ').replace(/\s+/g, ' ').trim();
+}
+/* Từ đệm — không mang ý của câu hỏi. Danh sách RỘNG có chủ ý: từ nào người hỏi nói mà kho
+   không biết thì bộ tìm KHÔNG dám "chắc" (xem tuLa trong timCau) — nên mọi tiếng đưa đẩy thường
+   gặp phải nằm ở đây, không thì một tiếng "dạ" cũng làm robot mất tự tin. */
+var TU_DEM_TIM = ('là gì có không thì và của cho tôi em anh chị bác sĩ hỏi xin ạ nhỉ vậy thế nào như được này đó với một các ' +
+  'những hay hoặc về ở khi mà ra sao à ơi robot bạn sản phẩm cái nó ấy nhé đi rồi vui lòng biết muốn cần giúp nói xem ' +
+  'phải chưa đã sẽ đang bị bao vào chỗ giống giải thích giới thiệu dạ vâng ừ ờ thưa hả ha nha á kia đây đấy thôi chứ luôn ' +
+  'mình tớ cháu cô chú quý vị làm ơn tí chút thêm nữa rằng nghe bảo thử kỹ rõ chi tiết thông tin tư vấn trả lời câu ' +
+  'ta người việc chuyện điều kiểu loại gọi tên nhắc lại lần tiếp theo sau đây trước hết nhân tiện tiện thể mới vừa cũng còn ' +
+  'rất quá lắm khá hơi thật sự thực ra nói chung nhìn đại khái tức nghĩa do vì nên bởi tại để từ đến tới').split(' ');
+/* Tên sản phẩm cũng là từ đệm: câu nào cũng hỏi về nó, và bộ nhận dạng giọng nói nghe "Gelsectan"
+   ra đủ kiểu. ⚠ SAU MỖI BUỔI CHẠY MÁY THẬT: kéo nhật ký về, thấy robot nghe tên ra chữ gì thì thêm vào đây. */
+var TEN_SAN_PHAM = 'gelsectan gensectan gelsectal gensec sectan xectan gel gen ghen geo jel gieo séc sét xéc xét sec set tan tang'.split(' ');
+var TAP_DEM_TIM = {};
+TU_DEM_TIM.concat(TEN_SAN_PHAM).forEach(function(w){ TAP_DEM_TIM[w] = 1; });
+/* Mấy chữ đệm lại là Ý CHÍNH khi đứng trong cụm — giữ lại đúng vị trí: "trước/sau (bữa) ăn" ·
+   "sau nhiễm trùng" · "điều trị" · "điều kiện". */
+function tuCuaCau(s){
+  var w = chuanCau(s).split(' '), ra = [];
+  w.forEach(function(x, i){
+    if(!x) return;
+    var ke = w[i + 1] || '', ke2 = w[i + 2] || '', truoc = w[i - 1] || '';
+    var giu = ((x === 'trước' || x === 'sau') && (ke === 'ăn' || ke === 'bữa' || (ke === 'khi' && ke2 === 'ăn') || ke === 'nhiễm')) ||
+              (x === 'sau' && (truoc === 'hay' || truoc === 'trước')) ||
+              (x === 'điều' && (ke === 'trị' || ke === 'kiện'));
+    if(giu || !TAP_DEM_TIM[x]) ra.push(x);
+  });
+  return ra;
+}
+var CHI_MUC = null, IDF = null, IDF_LA = 1, BIET = {};
+function dungChiMuc(){
+  var N = CAU_HOI.length, df = {};
+  CHI_MUC = CAU_HOI.map(function(c){
+    var hop = {}, hopCap = {};
+    var cach = [c.hoi].concat(c.bien_the || []).map(function(p){
+      var tu = tuCuaCau(p), tap = {}, cap = {};
+      tu.forEach(function(w, i){ tap[w] = 1; hop[w] = 1; if(i > 0){ cap[tu[i - 1] + ' ' + w] = 1; hopCap[tu[i - 1] + ' ' + w] = 1; } });
+      return { tu: tu, tap: tap, cap: cap };
+    });
+    Object.keys(hop).forEach(function(w){ df[w] = (df[w] || 0) + 1; });
+    /* Chữ trong CÂU TRẢ LỜI: bằng chứng yếu (nửa điểm), và để từ đó không bị coi là "từ lạ". */
+    var dap = {};
+    tuCuaCau(c.dap).forEach(function(w){ dap[w] = 1; BIET[w] = 1; });
+    return { c: c, cach: cach, hop: hop, hopCap: hopCap, dap: dap };
+  });
+  IDF = {};
+  Object.keys(df).forEach(function(w){ IDF[w] = Math.log(1 + N / df[w]); });
+  IDF_LA = Math.log(1 + N / 2);            // từ không có trong kho: nặng như một từ hiếm
+  CHI_MUC.df = df;
+}
+function nangTu(w){ return IDF[w] || IDF_LA; }
+/** Giống MỘT cách hỏi cụ thể tới đâu (0..1): vừa phủ câu người hỏi, vừa không thừa chữ. */
+function diemCach(tu, p){
+  var tongQ = 0, trung = 0, tongP = 0;
+  tu.forEach(function(w){ var n = nangTu(w); tongQ += n; if(p.tap[w]) trung += n; });
+  p.tu.forEach(function(w){ tongP += nangTu(w); });
+  if(!trung) return 0;
+  var phu = trung / tongQ, gon = trung / tongP;
+  var f = 2 * phu * gon / (phu + gon);
+  var cum = 0;
+  for(var i = 1; i < tu.length; i++) if(p.cap[tu[i - 1] + ' ' + tu[i]]) cum++;
+  return Math.min(1, 0.7 * f + 0.3 * phu + Math.min(0.16, cum * 0.08));
+}
+/** Câu người hỏi được CẢ NHÓM cách hỏi của một câu phủ tới đâu (0..1) — tính cả CỤM HAI TỪ.
+    Tiếng Việt tách theo âm tiết nên "hạn sử dụng" và "sử dụng dài hạn" trùng cả ba chữ; chỉ
+    cụm hai từ mới phân biệt được. */
+function diemPhu(tu, m){
+  var tong = 0, trung = 0;
+  tu.forEach(function(w, i){
+    var n = nangTu(w); tong += n; if(m.hop[w]) trung += n; else if(m.dap[w]) trung += 0.5 * n;
+    if(i > 0){ var nc = 0.5 * (nangTu(tu[i - 1]) + n); tong += nc; if(m.hopCap[tu[i - 1] + ' ' + w]) trung += nc; }
+  });
+  return tong ? trung / tong : 0;
+}
+var NGUONG_CHAC = 0.66, NGUONG_GOI_Y = 0.38, CACH_BIET = 0.10;
+/** Trả { chac: câu hoặc null, goiY: [câu…], diem: [[id, điểm]…] }. */
+function timCau(cau){
+  if(!CHI_MUC) dungChiMuc();
+  var tu = tuCuaCau(cau);
+  if(!tu.length) return { chac: null, goiY: [], diem: [] };
+  var chuoi = tu.join(' '), trungKhit = [];
+  var kq = CHI_MUC.map(function(m){
+    var d = 0, khit = false;
+    m.cach.forEach(function(p){ var x = diemCach(tu, p); if(x > d) d = x; if(p.tu.join(' ') === chuoi) khit = true; });
+    if(khit) trungKhit.push(m);
+    return { m: m, d: 0.5 * d + 0.5 * diemPhu(tu, m) + (khit ? 0.5 : 0) };
+  }).sort(function(a, b){ return b.d - a.d; });
+  var nhat = kq[0], nhi = kq[1] || { d: 0 };
+  var chac = null;
+  /* TRÙNG KHÍT một cách hỏi đã khai (sau khi bỏ từ đệm) và chỉ MỘT câu có cách hỏi đó → chắc luôn.
+     Không có lối tắt này thì chính câu gốc "Gelsectan dùng cho bệnh gì?" thua sát nút câu về bệnh nhi. */
+  if(trungKhit.length === 1) chac = trungKhit[0].c;
+  else if(nhat.d >= NGUONG_CHAC && nhat.d - nhi.d >= CACH_BIET){
+    /* HAI CHỐT trước khi dám đọc nguyên văn:
+       · TỪ LẠ: người hỏi nói một từ mà cả kho — câu hỏi lẫn câu trả lời — không có ("smecta",
+         "suy thận") → câu hỏi có thể đang nói về thứ khác hẳn. Không chắc.
+       · TỪ HIẾM BỊ LẠC: từ kho CÓ biết nhưng thuộc (các) câu KHÁC chứ không thuộc câu định chọn →
+         không chắc. Thiếu chốt này thì "liều dùng cho trẻ em" ra câu liều dùng người lớn. */
+    var tuLa = tu.some(function(w){ return !IDF[w] && !BIET[w]; });
+    var lac = tu.some(function(w){ return IDF[w] && !nhat.m.hop[w] && CHI_MUC.df[w] <= 2; });
+    if(!tuLa && !lac) chac = nhat.m.c;
+  }
+  var goiY = kq.filter(function(x){ return x.d >= NGUONG_GOI_Y; }).slice(0, 3).map(function(x){ return x.m.c; });
+  return { chac: chac, goiY: goiY, diem: kq.slice(0, 4).map(function(x){ return [x.m.c.id, Math.round(x.d * 100) / 100]; }) };
+}
+
+/* ── CÁC LỚP CHẶN BẰNG MÃ — chạy TRƯỚC bộ tìm và trước AI. Dặn mô hình "đừng nói" là không đủ
+      (đo ở app Mông Dương 11/08/2026: dặn "đừng đoán" vẫn tự bịa danh sách giấy tờ). ── */
+var RE_KHAN_CAP = /cấp cứu|nguy kịch|ngất xỉu|bất tỉnh|co giật|đột quỵ|tai biến|không thở được|khó thở quá|ngạt thở|chảy máu nhiều|gọi cứu thương|gọi 115|có người ngã|có người ngất|cháy nhà|hỏa hoạn|hoả hoạn/;
+var RE_CHINH_TRI = /chính trị|đảng cộng sản|đảng viên|tổng bí thư|chủ tịch nước|thủ tướng|bộ chính trị|quốc hội|bầu cử|biểu tình|phản động|nhân quyền|đa đảng|biển đông|hoàng sa|trường sa|chủ quyền|tổng thống/;
+/* Xin tư vấn cho MỘT NGƯỜI CỤ THỂ — robot giới thiệu sản phẩm, không kê đơn. Phải có chữ chỉ người
+   hỏi/người nhà đi liền động từ bệnh, để "cho tôi hỏi liều dùng" vẫn hỏi được. */
+var RE_CA_NHAN = /(^| )(tôi|tui|mình|em|con tôi|con em|bé nhà tôi|bé nhà em|bố tôi|mẹ tôi|ba tôi|má tôi|vợ tôi|chồng tôi|ông tôi|bà tôi|người nhà tôi|người nhà em|bệnh nhân của tôi|bệnh nhân tôi) (đang |hay |thường |vừa |mới |cũng |năm nay )?(bị|mắc|đau|đi ngoài|tiêu chảy|uống thuốc|dùng thuốc|điều trị|có nên|nên uống|nên dùng|có uống được|có dùng được|uống được không|dùng được không|\d+ tuổi)|trường hợp của (tôi|em|mình)|(tôi|em|mình) (có )?(nên|cần) (uống|dùng)|kê (đơn|toa) (cho|giúp|hộ)|chẩn đoán (giúp|cho|hộ)/;
+var RE_GIA = / giá | bao nhiêu tiền|mấy tiền|mua ở đâu|bán ở đâu|mua được ở| mua (ở|tại) |chỗ nào bán|đặt mua|đặt hàng|chiết khấu|bảo hiểm (y tế )?(có )?(chi trả|thanh toán|chi)|giá bán|giá thầu/;
+/* Compliance của khách: "hỗ trợ kiểm soát triệu chứng", KHÔNG "chữa khỏi". Câu hỏi có chữ này
+   thì robot đọc câu cố định, không để bộ tìm hay mô hình trả lời theo chữ của người hỏi. */
+var RE_CHUA_KHOI = /chữa khỏi|khỏi hẳn|khỏi bệnh|trị dứt|dứt điểm|chữa dứt|chữa được bệnh|trị khỏi|khỏi hoàn toàn/;
+var RE_DE_LAI = /để lại (thông tin|số điện thoại|liên hệ|số)|(muốn|cần|xin) (được )?tư vấn (thêm|chi tiết|riêng)|liên hệ (lại )?(với )?(tôi|em|mình)|gọi lại cho (tôi|em|mình)|đăng ký (nhận )?(tư vấn|thông tin)/;
+var RE_LA_GI = /là (cái )?gì|giới thiệu|nói về (sản phẩm|gelsectan)/;
+var RE_XG_CHAO = /^(xin )?chào( (robot|bạn|em|anh|chị|cháu|cả nhà|mọi người))*( nhé| nha| ạ)?$/;
+var RE_XG_TEN = /^((bạn|em|robot|mày|cháu|cậu|robot này) )?(tên (là )?gì|là ai|tên gì)( (thế|vậy|đấy|ạ|nhỉ|nhé))*$/;
+var RE_XG_CAM_ON = /cảm ơn|cám ơn|thank/;
+var RE_XG_TAM_BIET = /tạm biệt|bye|chào nhé|về đây/;
+
+/**
+ * PHÂN XỬ MỘT CÂU — trả đối tượng cho Kotlin (TraLoi.kt) thi hành:
+ *   loai 'chan' · 'xa-giao' · 'form' · 'kho'  → app tự đọc `doc`, hiện `hien`; AI KHÔNG được trả lời
+ *   loai 'goi-y'  → chưa chắc: hiện các câu `goiY` cho khách chạm; máy có AgentOS thì AI vẫn trả lời
+ *   loai 'khong'  → ngoài bộ câu hỏi: AI trả lời, không có AI thì đọc `doc` (= lời "em chưa có")
+ */
+/* ══════════════════════════════════════════════════════════════════════════
+   SỬA TÊN "GELSECTAN" SAU KHI NHẬN GIỌNG NÓI (anh Trường yêu cầu 01/10/2026)
+   Người Việt đọc tên này rất khác nhau, bộ nhận dạng lại ghi theo âm tiết tiếng Việt:
+   "gen séc tan" · "giơ séc tan" · "ghen sếch tăng" · "dên xéc tan" · "séc tan" · "Gensectan"…
+   Hàm này gộp lại thành đúng một chữ "Gelsectan" — để màn hình hiện đúng tên, nhật ký đọc
+   được, và bộ tìm câu hỏi không bị mấy âm tiết lạ làm mất tự tin.
+
+   Nhận dạng theo KHUÔN ÂM, không theo danh sách cứng — gặp cách nghe mới vẫn bắt được:
+     [âm đầu kiểu GEN]?  +  [âm giữa kiểu SÉC]  +  [âm cuối kiểu TAN]
+   Chốt chống sửa nhầm: âm giữa kiểu "sét/sắc/xét" (từ tiếng Việt có thật) chỉ được nhận khi có
+   âm đầu đi trước — "xét tăng lương" phải giữ nguyên. Âm cuối chỉ nhận tan/tang/tăng/tân, không
+   nhận "tâm" ("xét tâm lý").
+   Sửa xong PHẢI chạy node tools/thu-tim-kiem.mjs — có mục SỬA TÊN gồm cả câu phải giữ nguyên.
+   ══════════════════════════════════════════════════════════════════════════ */
+function boDauTu(s){
+  s = String(s || '').toLowerCase();
+  if(s.normalize) s = s.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return s.replace(/đ/g, 'd').replace(/[^a-z0-9]/g, '');
+}
+var KHUON_LIEN = /^(gh?|gi|j|d|z|r)?[eoi][lnu]?[sxz][eao][ckt]h?t[ao]n?g?l?$/;   // gelsectan · gensectan · jelsectan
+var KHUON_DAU  = /^(gh?|gi|j|d|z|r|tr|ch)?[eoi][lnu]?$/;                           // gen · gel · ghen · giơ · dên · en
+var KHUON_GIUA_RO = /^[sxz]e[ck]h?$/;                                                 // séc · sếch · xéc — không phải từ thường
+var KHUON_GIUA = /^[sxz][eao][ckt]h?$/;                                               // + sét · sắc · xét · sát — phải có âm đầu
+var KHUON_GIUA_CUOI = /^[sxz]e[ckt]h?t[ao]n?g?$/;                                     // "sectan" viết liền sau "gen"
+function laCuoi(w){ return /^t(a|an|ang)$/.test(w); }   // tan · tang · tăng · tân — KHÔNG nhận tâm/tầm
+/* BẢNG BÍ DANH lấy từ nhật ký robot thật (D.bi_danh_ten, khai ở dung-du-lieu.py). Chạy TRƯỚC khuôn âm.
+   Cụm có cờ "dau" chỉ thay khi đứng đầu câu — sau lời dẫn như "cho hỏi", "em ơi". */
+var LOI_DAN = ['cho hoi', 'cho em hoi', 'cho toi hoi', 'cho anh hoi', 'cho chi hoi', 'xin hoi', 'em oi', 'robot oi',
+               'ban oi', 'cho minh hoi', 'vay', 'the'];
+function thayBiDanh(cau){
+  var ds = (typeof D !== 'undefined' && D.bi_danh_ten) || [];
+  var goc = String(cau || '').split(/\s+/).filter(function(x){ return x; });
+  var kd = goc.map(boDauTu);
+  var dauCau = 0;                                   // vị trí bắt đầu câu sau lời dẫn
+  LOI_DAN.forEach(function(l){ var p = l.split(' '); if(p.join(' ') === kd.slice(0, p.length).join(' ') && p.length > dauCau) dauCau = p.length; });
+  var ra = [], i = 0;
+  while(i < goc.length){
+    var khop = null;
+    for(var k = 0; k < ds.length && !khop; k++){
+      var p = ds[k].cum.split(' ');
+      if(ds[k].dau && i !== dauCau && i !== 0) continue;
+      if(kd.slice(i, i + p.length).join(' ') === p.join(' ')) khop = p.length;
+    }
+    if(khop){ var cuoi = goc[i + khop - 1], m = cuoi.match(/[.,!?;:…]+$/); ra.push('Gelsectan' + (m ? m[0] : '')); i += khop; continue; }
+    ra.push(goc[i]); i += 1;
+  }
+  return ra.join(' ');
+}
+/* CỤM LẠ ĐẦU CÂU (thêm 01/10/2026 sau 12 câu nhật ký robot thật). Google nghe "Gelsectan" ra MỖI LẦN MỘT KIỂU:
+   "giá xe tư" · "dàn xe tăng" · "xem xe tăng" · "ren sex teen" · "truyện sex thanh" · "settle" · "danh sách ta"…
+   Bảng bí danh không bao giờ đủ. Nhưng ba điều luôn đúng:
+     ① tên sản phẩm đứng ĐẦU câu hỏi (sau lời dẫn "cho hỏi", "em ơi" nếu có)
+     ② cụm đó gồm những chữ KHO DỮ LIỆU KHÔNG BIẾT (không có trong câu hỏi lẫn câu trả lời)
+     ③ nghe na ná "sec…tan": có âm S/X rồi về sau có âm T
+   và phần còn lại là một CÂU HỎI (có gì / không / nào / sao / bao / chưa).
+   Đủ cả bốn thì cụm đó là "Gelsectan". Thiếu một là giữ nguyên — "xét tăng lương cho nhân viên"
+   (không phải câu hỏi), "xét tâm lý bệnh nhân" (không phải câu hỏi), "giá bao nhiêu" (không có âm S…T)
+   đều không bị đụng. Tên thuốc KHÁC (smecta…) nằm ở KHONG_PHAI_TEN để không bị nhận nhầm. */
+var KHONG_PHAI_TEN = {smecta:1, imodium:1, duphalac:1, buscopan:1, debridat:1, motilium:1, enterogermina:1, bioflora:1,
+                      berberin:1, berberine:1, diosmectite:1, racecadotril:1, hidrasec:1};
+function giongTen(w){ return /^[sxzgdrjyt]/.test(w); }   // chữ đệm bắt đầu bằng âm này mới được nằm trong cụm
+function thayCumDauLa(cau){
+  if(!CHI_MUC) dungChiMuc();
+  var goc = String(cau || '').split(/\s+/).filter(function(x){ return x; });
+  var kd = goc.map(boDauTu);
+  var bd = 0;
+  LOI_DAN.forEach(function(l){ var p = l.split(' '); if(p.join(' ') === kd.slice(0, p.length).join(' ') && p.length > bd) bd = p.length; });
+  /* Gom cụm: chữ lạ liên tiếp; gặp âm S/X thì đánh dấu; gặp âm T SAU âm S/X là hết tên (lấy luôn chữ đó,
+     kể cả khi kho có biết — "tăng" có trong câu "tăng tính thấm"). */
+  var j = bd, coS = false, xong = false;
+  while(j < goc.length && j - bd < 4 && !xong){
+    var w = chuanCau(goc[j]), k = kd[j];
+    if(!w || w === 'gelsectan' || KHONG_PHAI_TEN[k]) break;
+    if(coS && /^t/.test(k)){ j++; xong = true; break; }
+    if(IDF[w] || (BIET[w] && !/^[sxz]/.test(k))) break;   // chữ S/X chỉ có trong câu TRẢ LỜI (vd "sát") vẫn được tính
+    if(TAP_DEM_TIM[w] && !giongTen(k)) break;
+    if(/^[sxz]/.test(k)) coS = true;
+    j++;
+  }
+  if(j === bd) return cau;
+  var cum = kd.slice(bd, j);
+  /* Đủ âm "sec…tan": hoặc một chữ S/X rồi một chữ T (xong = true), hoặc MỘT chữ dài có s…t bên trong
+     ("settle", "translate"). Một chữ "xét" đứng riêng thì không tính. */
+  if(!xong && !(cum.length === 1 && cum[0].length >= 5 && /[sxz][a-z]*t/.test(cum[0]))) return cau;
+  var con = ' ' + kd.slice(j).join(' ') + ' ';
+  if(!/ (gi|khong|nao|sao|bao|chua|may|dau|ai) /.test(con)) return cau;
+  /* Chữ ngay sau cụm phải là chữ kho biết hoặc chữ đệm ("có", "là", "uống", "khác"…) — "xét tăng LƯƠNG được
+     không" thì "lương" là chữ lạ: câu đang nói chuyện khác, không phải tên sản phẩm. */
+  var sau = chuanCau(goc[j] || '');
+  if(sau && !(IDF[sau] || BIET[sau] || TAP_DEM_TIM[sau])) return cau;
+  var cuoi = goc[j - 1], m = cuoi.match(/[.,!?;:…]+$/);
+  return goc.slice(0, bd).concat(['Gelsectan' + (m ? m[0] : '')], goc.slice(j)).join(' ');
+}
+function suaTenSanPham(cau){
+  var tu = thayCumDauLa(thayBiDanh(cau)).split(/\s+/);
+  var ra = [], i = 0;
+  while(i < tu.length){
+    var a = boDauTu(tu[i]), b = boDauTu(tu[i + 1]), c = boDauTu(tu[i + 2]);
+    var dauCau = function(goc){ var m = String(goc).match(/[.,!?;:…]+$/); return m ? m[0] : ''; };
+    if(a && KHUON_LIEN.test(a)){ ra.push('Gelsectan' + dauCau(tu[i])); i += 1; continue; }
+    if(a && b && c && KHUON_DAU.test(a) && KHUON_GIUA.test(b) && laCuoi(c)){ ra.push('Gelsectan' + dauCau(tu[i + 2])); i += 3; continue; }
+    if(a && b && KHUON_DAU.test(a) && KHUON_GIUA_CUOI.test(b)){ ra.push('Gelsectan' + dauCau(tu[i + 1])); i += 2; continue; }
+    if(a && b && KHUON_GIUA_RO.test(a) && laCuoi(b)){ ra.push('Gelsectan' + dauCau(tu[i + 1])); i += 2; continue; }
+    ra.push(tu[i]); i += 1;
+  }
+  return ra.join(' ');
+}
+
+function phanXu(cau){
+  cau = suaTenSanPham(cau);
+  var t = chuanCau(cau);
+  /* Bỏ tên sản phẩm trước khi xét các lớp chặn: "mua Gelsectan ở đâu" phải khớp "mua ở đâu". */
+  var tKhongTen = t.split(' ').filter(function(w){ return TEN_SAN_PHAM.indexOf(w) < 0; }).join(' ');
+  var co = ' ' + tKhongTen.replace(/trẻ em/g, 'trẻ_em').replace(/đánh giá/g, 'đánh_giá') + ' ';
+  function ra(loai, khoa, them){
+    var o = { loai: loai, khoa: khoa || '', hien: chuHien(L[khoa]), doc: chuDoc(L[khoa]), id: '', goiY: [], nutForm: false };
+    if(them) for(var k in them) o[k] = them[k];
+    return o;
+  }
+  if(!t) return ra('khong', 'chua_co', { nutForm: true });
+  if(RE_KHAN_CAP.test(t)) return ra('chan', 'khan_cap');
+  if(RE_CHINH_TRI.test(t)) return ra('chan', 'chinh_tri');
+  var soTu = t.split(' ').length;
+  if(soTu <= 8){
+    if(RE_XG_CHAO.test(t)) return ra('xa-giao', 'xg_chao');
+    if(RE_XG_TEN.test(t)) return ra('xa-giao', 'xg_ten');
+  }
+  if(RE_DE_LAI.test(t)) return ra('form', 'moi_de_lai');
+  if(RE_GIA.test(co)) return ra('chan', 'gia', { nutForm: true });
+  if(RE_CA_NHAN.test(co.trim())) return ra('chan', 'ca_nhan');
+  if(RE_CHUA_KHOI.test(t)) return ra('chan', 'chua_khoi');
+  var kq = timCau(cau);
+  /* "Gelsectan là gì", "giới thiệu về sản phẩm" — toàn từ đệm nên bộ tìm không có gì để bám.
+     Trả câu mở đầu của bộ câu hỏi (D.cau_la_gi). */
+  if(!kq.diem.length && RE_LA_GI.test(t) && THEO_ID[D.cau_la_gi]) kq.chac = THEO_ID[D.cau_la_gi];
+  /* "Gelsectan (đang/dùng) làm gì" — "làm" là từ đệm nên bộ tìm không có gì để bám. CHỈ khi câu CÓ tên sản
+     phẩm mới hiểu là hỏi công dụng: "em đang làm gì" là hỏi robot, không được đọc phần chỉ định. */
+  if(!kq.chac && !kq.diem.length && / gelsectan /.test(' ' + t + ' ') && /làm gì|để làm|công dụng/.test(t) && THEO_ID[D.cau_cong_dung]) kq.chac = THEO_ID[D.cau_cong_dung];
+  if(kq.chac) return { loai: 'kho', khoa: '', id: kq.chac.id, hien: kq.chac.dap, doc: kq.chac.doc, goiY: [], nutForm: false };
+  if(soTu <= 8){
+    if(RE_XG_CAM_ON.test(t)) return ra('xa-giao', 'xg_cam_on');
+    if(RE_XG_TAM_BIET.test(t)) return ra('xa-giao', 'xg_tam_biet');
+  }
+  if(kq.goiY.length) return ra('goi-y', 'goi_y', { goiY: kq.goiY.map(function(c){ return c.id; }) });
+  return ra('khong', 'chua_co', { nutForm: true });
+}
+/*__HET_BO_TIM__*/
+/** Kotlin hỏi lớp web — trả CHUỖI JSON. */
+window.phanXuCau = function(cau){
+  try{ var x = phanXu(cau); x.cauSua = suaTenSanPham(cau); return JSON.stringify(x); }catch(e){ return ''; }
+};
+
+/* ══════════════════════════════════════════════════════════════════════════
+   GIAO TIẾP AI — mặt biểu cảm + MỘT lời thoại + một nút mic bấm-mới-nghe (lối app Tây Hòa).
+   ══════════════════════════════════════════════════════════════════════════ */
+var MIC_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" ' +
+  'style="width:1.9rem;height:1.9rem;display:block"><rect x="9" y="3" width="6" height="11" rx="3"/>' +
+  '<path d="M5 11a7 7 0 0 0 14 0"/><path d="M12 18v3"/></svg>';
+var CHAM_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" ' +
+  'style="width:1.9rem;height:1.9rem;display:block"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>';
+var TRANG_THAI = {
+  'nghi':      { bt:MIC_SVG,  chu:'Bấm để nói',      lop:'',     dai:'',                           lopDai:'' },
+  'cho':       { bt:CHAM_SVG, chu:'Chờ một chút…',   lop:'cho',  dai:'Đang mở micro…',             lopDai:'cho' },
+  'nghe':      { bt:MIC_SVG,  chu:'Đang nghe…',      lop:'nghe', dai:'Anh chị cứ nói, đứng đối diện robot giúp em ạ', lopDai:'nghe' },
+  'nghi-ngoi': { bt:CHAM_SVG, chu:'Để em xem…',      lop:'nghi', dai:'Em đang tìm câu trả lời',    lopDai:'' },
+  'tra-loi':   { bt:MIC_SVG,  chu:'Bấm để hỏi tiếp', lop:'',     dai:'',                           lopDai:'' },
+  'khong-nghe':{ bt:MIC_SVG,  chu:'Bấm để nói lại',  lop:'',     dai:'Em chưa nghe được gì…',      lopDai:'khong' },
+  'khong-mic': { bt:CHAM_SVG, chu:'Chạm câu hỏi ở trên', lop:'nghi', dai:'', lopDai:'' }
+};
+function datTrangThai(t){
+  var c = TRANG_THAI[t] || TRANG_THAI['nghi'];
+  $('#mic-bieu').innerHTML = c.bt;
+  $('#mic-chu').textContent = c.chu;
+  $('#thanh-mic').className = 'thanh-mic ' + c.lop;
+  $('#dai-mic').textContent = c.dai;
+  $('#dai-mic').className = 'dai ' + c.lopDai;
+}
+function hienLoiThoai(chu, laNguoi){
+  var o = $('#ai-cau');
+  o.className = laNguoi ? 'nguoi' : '';
+  o.textContent = chu || '';
+  coChuTuCo(o, o.parentElement, 3, 1.2);
+}
+var viTriMau = 0;
+/** Hàng nút dưới lời thoại: câu gợi ý (theo id) · nút để lại thông tin · hoặc ba câu hỏi mẫu xoay vòng. */
+function veGoiY(ids, nutForm){
+  var o = $('#goi-y-chat'); o.innerHTML = '';
+  function nutCau(id, lop){
+    var c = THEO_ID[id]; if(!c) return;
+    var b = document.createElement('button'); if(lop) b.className = lop;
+    b.textContent = c.hoi;
+    b.onclick = function(){ hoiTheoId(id); };
+    o.appendChild(b);
+  }
+  (ids || []).forEach(function(id){ nutCau(id, 'xem'); });
+  if(nutForm){
+    var f = document.createElement('button'); f.className = 'form'; f.textContent = 'Để lại thông tin liên hệ';
+    f.onclick = function(){ moForm(null); };
+    o.appendChild(f);
+  }
+  if(!(ids || []).length && !nutForm){
+    var mau = D.cau_mau || [];
+    for(var i = 0; i < 3 && i < mau.length; i++) nutCau(mau[(viTriMau + i) % mau.length], '');
+    viTriMau = mau.length ? (viTriMau + 3) % mau.length : 0;
+  }
+}
+
+var aiSanSang = false, coMic = false, cheDoAI = 'dang-do', dangNgheMic = false, henNhipMic = null;
+
+function moChat(){
+  ve('mh-chat');
+  var loi = coMic ? L.chao_ai_mic : L.chao_ai_cham;
+  if(!coCau()) loi = L.chao_ai_mic;
+  hienLoiThoai(chuHien(loi), false);
+  veGoiY(null, false);
+  capNhatNutMic();
+  if(coCau() && CAU.vaoChat) try{ CAU.vaoChat(); }catch(e){}
+  docSau(loi, 450);
+}
+function capNhatNutMic(){
+  var n = $('#thanh-mic'); if(!n) return;
+  if(!coCau()){ datTrangThai('nghi'); $('#dai-mic').textContent = 'Bản máy tính: bấm để GÕ câu hỏi thử'; return; }
+  if(!coMic){ datTrangThai('khong-mic'); return; }
+  if(!aiSanSang){ datTrangThai('nghi'); n.classList.add('nghi'); $('#mic-chu').textContent = 'Đang kết nối…';
+                  $('#dai-mic').textContent = 'Anh chị chờ em một chút, hoặc chạm câu hỏi ở trên ạ'; return; }
+  if(!dangNgheMic) datTrangThai('nghi');
+}
+function bamMic(){
+  if(!coCau()){ goThuTrenMayTinh(); return; }
+  if(!coMic || !aiSanSang) return;
+  thaoTac();
+  if(dangNgheMic){ try{ CAU.tatMic(); }catch(e){} dangNgheMic = false; datTrangThai('nghi'); return; }
+  veGoiY(null, false);
+  datTrangThai('cho');
+  try{ CAU.batMic(); }catch(e){}
+  clearTimeout(henNhipMic);
+  henNhipMic = setTimeout(function(){
+    if(manDang === 'mh-chat' && !dangNgheMic){ dangNgheMic = true; datTrangThai('nghe'); }
+  }, 1500);
+}
+/** Khách chạm một câu có sẵn trong bộ câu hỏi — biết chắc là câu nào nên đọc nguyên văn luôn,
+    không qua bộ tìm, không qua AI. */
+function hoiTheoId(id){
+  var c = THEO_ID[id]; if(!c) return;
+  thaoTac();
+  hienLoiThoai(c.dap, false);
+  veGoiY(null, false);
+  datTrangThai(coMic || !coCau() ? 'tra-loi' : 'khong-mic');
+  if(coCau() && CAU.ghiNhatKy) try{ CAU.ghiNhatKy(c.hoi, 'cham', c.id); }catch(e){}
+  docSau(c, 350);
+}
+/** Bản chạy trên máy tính (không có robot): gõ câu hỏi để thử bộ hiểu câu. */
+function goThuTrenMayTinh(){
+  var cau = window.prompt('Bản máy tính — gõ một câu hỏi để thử bộ hiểu câu:', '');
+  if(!cau) return;
+  hienLoiThoai(suaTenSanPham(cau), true);
+  var x = phanXu(cau);
+  setTimeout(function(){
+    if(x.loai === 'form'){ window.hienTraLoi(x.hien, '[]', false); moForm(null); return; }
+    if(x.loai === 'khong') window.hienTraLoi('(Ngoài bộ câu hỏi — trên robot, AgentOS + kho Portal sẽ trả lời. Không có AI thì robot nói:) ' + x.hien, '[]', true);
+    else window.hienTraLoi(x.hien, JSON.stringify(x.goiY), x.nutForm);
+  }, 500);
+}
+function ketThucPhien(){
+  clearTimeout(henNhipMic); dangNgheMic = false;
+  if(coCau()){
+    try{ if(CAU.tatMic) CAU.tatMic(); }catch(e){}
+    try{ if(CAU.xoaNguCanh) CAU.xoaNguCanh(); }catch(e){}
+  }
+}
+
+/* ── Kotlin gọi vào ── */
+window.baoAISanSang = function(ok){ aiSanSang = !!ok; capNhatNutMic(); };
+/** Kotlin khai máy có mic dùng được không + chế độ AI ("agentos" · "du-phong" · "khong"). */
+window.baoCheDoAI = function(cheDo, micDungDuoc){ cheDoAI = cheDo; coMic = !!micDungDuoc; if(manDang === 'mh-chat') capNhatNutMic(); };
+window.nhanLoiNoi = function(ai, cau, xong){
+  if(manDang !== 'mh-chat' || formDangMo) return;
+  henVeCho(ai === 'robot' ? 8000 : 0);
+  if(ai === 'nguoi'){
+    dangNgheMic = !xong;
+    hienLoiThoai(suaTenSanPham(cau), true);      // khách nói "gen séc tan" → màn hiện "Gelsectan"
+    if(xong) datTrangThai('nghi-ngoi');
+  } else {
+    hienLoiThoai(cau, false);
+    datTrangThai('tra-loi');
+  }
+};
+/** Kotlin đưa câu trả lời do APP quyết định (đọc nguyên văn / câu chặn / câu "chưa có") lên màn. */
+window.hienTraLoi = function(chu, idsJson, nutForm){
+  if(manDang !== 'mh-chat') return;
+  var ids = []; try{ ids = JSON.parse(idsJson || '[]'); }catch(e){}
+  /* chu rỗng = app chỉ bày câu gợi ý, phần trả lời để AgentOS nói — giữ nguyên trạng thái "đang tìm". */
+  if(chu){ hienLoiThoai(chu, false); datTrangThai(coMic || !coCau() ? 'tra-loi' : 'khong-mic'); }
+  if(chu || ids.length || nutForm) veGoiY(ids, !!nutForm);
+  henVeCho(String(chu || '').length / TOC_DO_DOC * 1000);
+};
+/** Khách nói "tôi muốn để lại thông tin" — Kotlin bảo mở bảng. */
+window.moFormTuAI = function(){ if(manDang === 'mh-chat') moForm(null, true); };
+window.robotDocXong = function(){
+  henVeCho();
+  if(manDang === 'mh-chat' && !dangNgheMic) datTrangThai(coMic || !coCau() ? 'tra-loi' : 'khong-mic');
+  /* Khách đổi câu giữa chừng: tin "đọc xong" của câu CŨ (vừa bị cắt) về sau khi câu MỚI đã được xin đọc —
+     bỏ qua, không thì nút ghi "Nghe lại" trong lúc robot đang đọc câu mới. */
+  if(manDang === 'mh-tra-cuu' && Date.now() - lucXinDocTC > 900) datDangDocTC(false);
+};
+window.baoMicTuTat = function(){ dangNgheMic = false; if(manDang === 'mh-chat') datTrangThai('nghi-ngoi'); };
+window.baoMicKhongNgheDuoc = function(){ dangNgheMic = false; if(manDang === 'mh-chat') datTrangThai('khong-nghe'); };
+window.luiHeThong = function(){
+  if(formDangMo){ boQuaForm(); return '1'; }
+  if($('#phu-kt').classList.contains('hien')){ dongKT(); return '1'; }
+  if($('#phu-hoi').classList.contains('hien')){ dongHoi(); return '1'; }
+  if(manDang === 'mh-tra-cuu' || manDang === 'mh-chat'){ veTrangChu(); return '1'; }
+  if(manDang !== 'mh-cho'){ veManCho(); return '1'; }
+  return '0';
+};
+
+/* ══════════════════════════════════════════════════════════════════════════
+   BẢNG ĐỂ LẠI THÔNG TIN — bốn ô khách yêu cầu → CAU.ghiKhach → thẻ nhớ robot TRƯỚC,
+   Google Sheets của khách sau (KhachHang.kt; mất mạng thì xếp hàng gửi lại).
+   Bàn phím Telex tự dựng: bàn phím Android trên robot không gõ nổi dấu tiếng Việt.
+   ══════════════════════════════════════════════════════════════════════════ */
+var O_FORM = D.form || [];
+var raw = {}, oDang = '', shift = false, formDangMo = false, sauForm = null, nguonForm = '', henDongForm = null;
+function oTheoMa(ma){ for(var i = 0; i < O_FORM.length; i++) if(O_FORM[i].ma === ma) return O_FORM[i]; return null; }
+/**
+ * @param sau       hàm chạy sau khi gửi xong hoặc bỏ qua (null = ở lại màn đang đứng)
+ * @param khongDoc  true = robot vừa nói lời mời rồi (đường từ AI), đừng đọc lần nữa
+ */
+function moForm(sau, khongDoc){
+  thaoTac();
+  if(dangNgheMic){ if(coCau()) try{ CAU.tatMic(); }catch(e){} dangNgheMic = false; }
+  sauForm = sau || null;
+  nguonForm = manDang === 'mh-chat' ? 'Giao tiếp AI' : manDang === 'mh-tra-cuu' ? 'Tra cứu' : 'Màn chính';
+  O_FORM.forEach(function(o){ raw[o.ma] = ''; });
+  shift = false;
+  $('#form-than').hidden = false; $('#form-cam-on').hidden = true; $('#form-bo-qua').hidden = false;
+  $('#form-loi-moi').textContent = chuHien(L.form_mo);
+  $('#phu-form').classList.add('hien');
+  formDangMo = true;
+  chonO(O_FORM.length ? O_FORM[0].ma : '');
+  henVeCho();
+  if(!khongDoc) docSau(L.form_mo, 400);
+}
+function dongForm(){
+  /* Huỷ hẹn tự đóng của màn cảm ơn — không thì nó nổ muộn và đóng nhầm bảng khách vừa mở LẠI. */
+  clearTimeout(henDongForm);
+  $('#phu-form').classList.remove('hien');
+  formDangMo = false;
+  var sau = sauForm; sauForm = null;
+  if(sau) sau(); else henVeCho();
+}
+function boQuaForm(){ thaoTac(); clearTimeout(henDongForm); daBoQua = true; dongForm(); }
+function giaTri(o){
+  var r = raw[o.ma] || '';
+  if(o.kieu === 'so') return r;
+  var s = r.split(' ').map(telex).join(' ');
+  if(o.hoa === 'dau') s = s.charAt(0).toUpperCase() + s.slice(1);
+  else if(o.hoa) s = s.replace(/(^|\s)(\S)/g, function(m, a, b){ return a + b.toUpperCase(); });
+  return s;
+}
+function veForm(){
+  $('#form-luoi').innerHTML = O_FORM.map(function(o){
+    var v = giaTri(o), dang = o.ma === oDang;
+    return '<div class="o' + (dang ? ' dang' : '') + '" id="o-' + o.ma + '" onclick="chonO(\'' + o.ma + '\')">' +
+      '<label>' + thoat(o.nhan) + (o.bat ? ' <i>*</i>' : '') + '</label>' +
+      '<div class="gia' + (v ? '' : ' trong') + '">' + (v ? thoat(v) : thoat(o.goi)) + (dang ? '<span class="nhay"></span>' : '') + '</div>' +
+      '<div class="bao" id="bao-' + o.ma + '"></div></div>';
+  }).join('');
+}
+function chonO(ma){
+  var o = oTheoMa(ma); if(!o) return;
+  oDang = ma; veForm(); veBanPhim();
+  $('#form-nhac').textContent = o.kieu === 'so' ? 'Nhập số điện thoại di động, 10 chữ số'
+    : 'Gõ kiểu Telex: aa = â · aw = ă · ow = ơ · uw = ư · dd = đ · s f r x j = sắc huyền hỏi ngã nặng';
+}
+function oKeTiep(){
+  var i = 0; O_FORM.forEach(function(o, j){ if(o.ma === oDang) i = j; });
+  chonO(O_FORM[(i + 1) % O_FORM.length].ma);
+}
+function goPhim(k){
+  var o = oTheoMa(oDang); if(!o) return;
+  var r = raw[o.ma] || '';
+  if(k === 'LUI'){ r = r.slice(0, -1); }
+  else if(k === 'HOA'){ shift = !shift; veBanPhim(); return; }
+  else if(k === 'XOA'){ r = ''; }
+  else if(k === 'XONG'){ oKeTiep(); return; }
+  else if(k === ' '){ if(r && r.charAt(r.length - 1) !== ' ') r += ' '; }
+  else {
+    if(o.kieu === 'so' && !/^\d$/.test(k)) return;
+    if(r.length < (o.kieu === 'so' ? 11 : 60)) r += shift ? k.toUpperCase() : k;
+    if(shift){ shift = false; veBanPhim(); }
+  }
+  raw[o.ma] = r; veForm();
+}
+function veBanPhim(){
+  var o = oTheoMa(oDang), bp = $('#ban-phim');
+  function nut(k, lop, nhan){ return '<button class="phim' + (lop ? ' ' + lop : '') + '" data-k="' + thoat(k) + '">' + thoat(nhan) + '</button>'; }
+  if(o && o.kieu === 'so'){
+    bp.className = 'ban-phim so';
+    bp.innerHTML = [['1','2','3'],['4','5','6'],['7','8','9'],['LUI','0','XONG']].map(function(h){
+      return '<div class="hang">' + h.map(function(k){
+        return k === 'XONG' ? nut(k, 'xong', 'Ô tiếp') : k === 'LUI' ? nut(k, 'phu-tro', 'Xoá lùi') : nut(k, '', k);
+      }).join('') + '</div>';
+    }).join('');
+    return;
+  }
+  bp.className = 'ban-phim';
+  var hang = [['1','2','3','4','5','6','7','8','9','0'], ['q','w','e','r','t','y','u','i','o','p'],
+    ['a','s','d','f','g','h','j','k','l'], ['HOA','z','x','c','v','b','n','m','LUI'], ['XOA','.','-','&',' ','/','(',')','XONG']];
+  bp.innerHTML = hang.map(function(h){
+    return '<div class="hang">' + h.map(function(k){
+      if(k === ' ') return nut(k, 'cach', 'dấu cách');
+      if(k === 'XONG') return nut(k, 'xong', 'Ô tiếp');
+      if(k === 'HOA') return nut(k, 'rong shift' + (shift ? ' dang' : ''), 'Chữ hoa');
+      if(k === 'LUI') return nut(k, 'rong phu-tro', 'Xoá lùi');
+      if(k === 'XOA') return nut(k, 'rong phu-tro', 'Xoá hết');
+      return nut(k, '', /[a-z]/.test(k) && shift ? k.toUpperCase() : k);
+    }).join('') + '</div>';
+  }).join('');
+}
+/* Một bộ nghe cho cả bàn phím — phím vẽ lại liên tục, gắn onclick từng phím là lệch lúc gõ nhanh. */
+$('#ban-phim').addEventListener('click', function(e){
+  var t = e.target;
+  while(t && t !== this && !(t.getAttribute && t.getAttribute('data-k') !== null)) t = t.parentNode;
+  if(t && t !== this) goPhim(t.getAttribute('data-k'));
+});
+
+/* Telex → chữ có dấu, xử lý trên TỪNG TỪ. aa â · ee ê · oo ô · aw ă · ow ơ · uw ư · dd đ · uow ươ ·
+   s f r x j = sắc huyền hỏi ngã nặng · z bỏ dấu. (Chép từ app Công nghiệp 2026 — đã chạy máy thật.) */
+var DAU = { s: 1, f: 2, r: 3, x: 4, j: 5 };
+var BANG = { a: 'aáàảãạ', ă: 'ăắằẳẵặ', â: 'âấầẩẫậ', e: 'eéèẻẽẹ', ê: 'êếềểễệ', i: 'iíìỉĩị', o: 'oóòỏõọ', ô: 'ôốồổỗộ',
+             ơ: 'ơớờởỡợ', u: 'uúùủũụ', ư: 'ưứừửữự', y: 'yýỳỷỹỵ' };
+function goc(ch){ for(var k in BANG){ var i = BANG[k].indexOf(ch.toLowerCase()); if(i >= 0) return { goc: k, dau: i, hoa: ch !== ch.toLowerCase() }; } return null; }
+function ghep(g, dau, hoa){ var c = BANG[g].charAt(dau); return hoa ? c.toUpperCase() : c; }
+function laNguyenAm(ch){ return !!goc(ch); }
+function telex(tu){
+  var ra = '';
+  for(var n = 0; n < tu.length; n++){
+    var ch = tu.charAt(n), th = ch.toLowerCase();
+    var cuoi = ra.slice(-1), g = cuoi ? goc(cuoi) : null;
+    if(th === 'a' && g && g.goc === 'a'){ ra = ra.slice(0, -1) + ghep('â', g.dau, g.hoa); continue; }
+    if(th === 'e' && g && g.goc === 'e'){ ra = ra.slice(0, -1) + ghep('ê', g.dau, g.hoa); continue; }
+    if(th === 'o' && g && g.goc === 'o'){ ra = ra.slice(0, -1) + ghep('ô', g.dau, g.hoa); continue; }
+    if(th === 'w' && g && (g.goc === 'a' || g.goc === 'o' || g.goc === 'u')){
+      var moi = { a: 'ă', o: 'ơ', u: 'ư' }[g.goc];
+      var truoc = ra.slice(0, -1);
+      var t2 = truoc.slice(-1), g2 = t2 ? goc(t2) : null;
+      if(g.goc === 'o' && g2 && g2.goc === 'u') truoc = truoc.slice(0, -1) + ghep('ư', g2.dau, g2.hoa);
+      ra = truoc + ghep(moi, g.dau, g.hoa); continue;
+    }
+    if(th === 'w' && ra && /[ươ]/i.test(ra.slice(-1))){ continue; }
+    if(th === 'd' && cuoi.toLowerCase() === 'd' && ra.length === 1){ ra = cuoi !== 'd' ? 'Đ' : 'đ'; continue; }
+    if(DAU[th] !== undefined || th === 'z'){
+      var vt = viTriDau(ra);
+      if(vt >= 0){ var gv = goc(ra.charAt(vt)); ra = ra.slice(0, vt) + ghep(gv.goc, th === 'z' ? 0 : DAU[th], gv.hoa) + ra.slice(vt + 1); continue; }
+    }
+    ra += ch;
+  }
+  /* Đặt LẠI dấu thanh sau khi đã có cả từ: "hoaf" + "ng" phải thành "hoàng", không phải "hòang". */
+  var dauCo = 0, khong = '';
+  for(var m = 0; m < ra.length; m++){ var c = ra.charAt(m), gg = goc(c); if(gg && gg.dau){ dauCo = gg.dau; khong += ghep(gg.goc, 0, gg.hoa); } else khong += c; }
+  if(dauCo){ var v2 = viTriDau(khong); if(v2 >= 0){ var g3 = goc(khong.charAt(v2)); ra = khong.slice(0, v2) + ghep(g3.goc, dauCo, g3.hoa) + khong.slice(v2 + 1); } }
+  return ra;
+}
+function viTriDau(s){
+  var va = []; for(var i = 0; i < s.length; i++) if(laNguyenAm(s.charAt(i))) va.push(i);
+  if(!va.length) return -1;
+  var dacBiet = va.filter(function(i){ return /[ăâêôơư]/i.test(s.charAt(i)); });
+  if(dacBiet.length) return dacBiet[dacBiet.length - 1];
+  if(va.length === 1) return va[0];
+  if(va[va.length - 1] < s.length - 1) return va[va.length - 1];
+  if(va.length >= 2 && va[0] === 1 && /^(qu|gi)/i.test(s.slice(0, 2))) return va[1];
+  return va[va.length - 2];
+}
+
+function guiForm(){
+  var ok = true, dau = null, kq = {};
+  O_FORM.forEach(function(o){
+    var v = giaTri(o).trim(); kq[o.ma] = v;
+    var loi = '';
+    if(o.bat && !v) loi = 'Chưa nhập';
+    if(o.ma === 'sdt' && v && !/^0\d{9}$/.test(v.replace(/\s/g, ''))) loi = 'Số di động 10 chữ số, bắt đầu bằng 0';
+    if(o.ma === 'ten' && v && v.length < 2) loi = 'Tên quá ngắn';
+    o._loi = loi;
+    if(loi){ ok = false; if(!dau) dau = o.ma; }
+  });
+  if(!ok){
+    chonO(dau);
+    O_FORM.forEach(function(o){ var b = $('#bao-' + o.ma); if(b) b.textContent = o._loi; $('#o-' + o.ma).classList.toggle('loi', !!o._loi); });
+    baoLoi(chuHien(L.form_loi)); return;
+  }
+  kq.nguon = nguonForm;
+  kq.quan_tam = cauDang ? cauDang.hoi : '';
+  var daGhi = false;
+  if(coCau() && CAU.ghiKhach){ try{ daGhi = !!CAU.ghiKhach(JSON.stringify(kq)); }catch(e){ daGhi = false; } }
+  else { daGhi = true; console.log('KHÁCH (bản máy tính):', JSON.stringify(kq)); window.KHACH_THU = kq; }
+  if(!daGhi){ baoLoi(chuHien(L.chua_luu)); doc(L.chua_luu); return; }
+  daDeLai = true;
+  thaoTac();
+  $('#form-than').hidden = true; $('#form-cam-on').hidden = false; $('#form-bo-qua').hidden = true;
+  $('#cam-on-ten').textContent = kq.ten;
+  $('#cam-on-chu').textContent = chuHien(L.cam_on);
+  docSau(L.cam_on, 300);
+  clearTimeout(henDongForm);
+  henDongForm = setTimeout(dongForm, 6500);
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   HỘP HỎI + HAI CHẾ ĐỘ NỀN
+   ══════════════════════════════════════════════════════════════════════════ */
+function moHoi(tieuDe, chu, nut){
+  thaoTac();
+  $('#hoi-tieu-de').textContent = tieuDe; $('#hoi-chu').textContent = chu;
+  var o = $('#hoi-nut'); o.innerHTML = '';
+  nut.forEach(function(n){
+    var b = document.createElement('button'); b.className = 'nut-lon to' + (n.lop ? ' ' + n.lop : ''); b.textContent = n.chu;
+    b.onclick = function(){ dongHoi(); if(n.lam) n.lam(); };
+    o.appendChild(b);
+  });
+  $('#phu-hoi').classList.add('hien');
+}
+function dongHoi(){ $('#phu-hoi').classList.remove('hien'); }
+function lyDoKhongDi(){ if(!coCau()) return ''; try{ return CAU.lyDoChuaDanDuongDuoc() || ''; }catch(e){ return ''; } }
+
+/* Có bước xác nhận: bấm nhầm là robot rời quầy giữa lúc đang có khách hỏi. */
+function hoiDuHanh(){
+  if(nen === 'du-hanh'){
+    moHoi('Đang ở chế độ Du hành', 'Robot sẽ tự đi tiếp khi không ai thao tác trong ' + (D.cho_ve_giay || 60) + ' giây.',
+      [{ chu: 'Tắt du hành', lop: 'nhat', lam: function(){ datNen('cho'); } }, { chu: 'Đi tiếp ngay', lop: 'luc', lam: veManCho }, { chu: 'Đóng', lop: 'nhat' }]);
+    return;
+  }
+  var ds = (D.du_hanh || {}).diem || [];
+  moHoi('Bắt đầu Du hành?', 'Robot sẽ rời vị trí, đi liên tục qua ' + ds.join(' → ') + ', vừa đi vừa giới thiệu. ' +
+        'Chạm vào màn hình bất cứ lúc nào để robot dừng lại.',
+    [{ chu: 'Quay lại', lop: 'nhat' }, { chu: 'Bắt đầu đi', lop: 'luc', lam: function(){ datNen('du-hanh'); veManChoKemLoi(L.dh_bat_dau); } }]);
+}
+function hoiLeTan(){
+  if(nen === 'le-tan'){
+    moHoi('Đang ở chế độ Lễ tân', 'Robot sẽ tiếp tục mời khách khi không ai thao tác trong ' + (D.cho_ve_giay || 60) + ' giây.',
+      [{ chu: 'Tắt lễ tân', lop: 'nhat', lam: function(){ datNen('cho'); } }, { chu: 'Tiếp tục ngay', lop: 'luc', lam: veManCho }, { chu: 'Đóng', lop: 'nhat' }]);
+    return;
+  }
+  moHoi('Bắt đầu chế độ Lễ tân?', 'Robot sẽ đi về điểm “' + ((D.le_tan || {}).diem || 'Le tan') + '”, đứng tại đó, ' +
+        'chiếu biểu cảm và đều đặn mời khách chạm vào màn hình.',
+    [{ chu: 'Quay lại', lop: 'nhat' }, { chu: 'Bắt đầu', lop: 'luc', lam: function(){ datNen('le-tan'); veManChoKemLoi(L.lt_bat_dau); } }]);
+}
+function datNen(n){ nen = n; if(manDang === 'mh-chinh') veManChinh(); }
+var khongNoiTruoc = 0;
+function veManChoKemLoi(loi){
+  dongMoiLop(); ve('mh-cho');
+  /* Đọc trễ một nhịp (ve vừa cắt tiếng), và hoãn câu giới thiệu đầu tiên cho tới khi câu này dứt. */
+  khongNoiTruoc = Date.now() + 700 + chuDoc(loi).length / TOC_DO_DOC * 1000;
+  setTimeout(function(){ if(manDang === 'mh-cho') doc(loi); }, 450);
+  setTimeout(batNen, 600);
+}
+function datTT(chu){ var o = $('#cho-tt'); o.textContent = chu || ''; o.hidden = !chu; }
+
+/* ── Bộ máy nền: MỘT bộ hẹn giờ cho cả hai chế độ ── */
+var dangDi = false, loiChang = false, chang = 0, henChang = null, henNoiNen = null, lanNoiNen = 0, dungTaiCho = false;
+function batNen(){
+  huyHenNen();
+  if(manDang !== 'mh-cho'){ return; }
+  if(nen === 'cho'){ datTT(''); return; }
+  if(nen === 'du-hanh') batDuHanh();
+  if(nen === 'le-tan') batLeTan();
+}
+function huyHenNen(){ clearTimeout(henChang); clearTimeout(henNoiNen); henChang = null; henNoiNen = null; }
+/** Khách chạm màn hình / đổi chế độ: dừng đi, dừng nói — NGAY. */
+function dungNen(){
+  huyHenNen();
+  if(dangDi && coCau()){ try{ CAU.dungDi(); }catch(e){} }
+  dangDi = false;
+}
+/** Lộ trình = các điểm khai trong dữ liệu; bản đồ có danh sách thì chỉ giữ điểm THẬT SỰ có trên bản đồ. */
+function loTrinh(){
+  var khai = (D.du_hanh || {}).diem || [];
+  if(!coCau() || !CAU.diemCoTrenBanDo) return khai;
+  var co = [];
+  try{ co = JSON.parse(CAU.diemCoTrenBanDo(JSON.stringify(khai)) || '[]'); }catch(e){}
+  return co.length ? co : khai;
+}
+function batDuHanh(){
+  if(nen !== 'du-hanh' || manDang !== 'mh-cho') return;
+  if(!coCau()){ datTT('Du hành — bản máy tính, không có robot để đi'); henNoi(3000); return; }
+  var ly = lyDoKhongDi();
+  if(ly){ datTT('Du hành: ' + ly + ' — thử lại sau 15 giây'); henChang = setTimeout(batDuHanh, 15000); return; }
+  diChang();
+}
+function diChang(){
+  if(nen !== 'du-hanh' || manDang !== 'mh-cho') return;
+  var ds = loTrinh(); if(!ds.length) return;
+  var diem = ds[chang % ds.length];
+  datTT('Du hành → ' + diem);
+  dangDi = true; loiChang = false;
+  try{ CAU.diToiDiem(diem); }catch(e){ dangDi = false; }
+  /* Chỉ nói khi lệnh đi SỐNG quá 2,5 giây: lệnh bị từ chối ngay (chưa định vị, thiếu điểm) mà vẫn
+     nói thì robot đứng một chỗ, cứ vài giây chào một câu — ồn cả gian hàng (đo 07/09/2026). */
+  if(!henNoiNen) henNoi(2500);
+}
+function batLeTan(){
+  if(nen !== 'le-tan' || manDang !== 'mh-cho') return;
+  var diem = (D.le_tan || {}).diem || 'Le tan';
+  dungTaiCho = false;
+  if(!coCau() || lyDoKhongDi()){
+    /* Không tự đi được (chưa định vị, chưa có bản đồ) → vẫn làm lễ tân NGAY TẠI CHỖ đang đứng. */
+    dungTaiCho = true;
+    datTT('Lễ tân — đứng tại chỗ' + (coCau() ? ' (' + lyDoKhongDi() + ')' : ' (bản máy tính)'));
+    henNoi(3000); return;
+  }
+  datTT('Lễ tân → đang về điểm ' + diem);
+  dangDi = true; loiChang = false;
+  try{ CAU.diToiDiem(diem); }catch(e){ dangDi = false; dungTaiCho = true; henNoi(3000); }
+}
+/** Kotlin báo tiến độ đi: 'bat-dau' · 'dang-di' · 'toi-noi' · 'loi' · 'da-dung'. */
+window.baoDanDuong = function(tt, loiNhan){
+  if(manDang !== 'mh-cho' || nen === 'cho') { dangDi = false; return; }
+  if(tt === 'bat-dau' || tt === 'dang-di'){ if(loiNhan) datTT((nen === 'du-hanh' ? 'Du hành: ' : 'Lễ tân: ') + loiNhan); return; }
+  dangDi = false;
+  if(tt === 'da-dung') return;
+  clearTimeout(henChang);
+  if(nen === 'du-hanh'){
+    if(tt === 'toi-noi'){ chang++; henChang = setTimeout(diChang, 600); }        // tới điểm là ĐI TIẾP NGAY, không đứng chờ
+    else { loiChang = true; chang++; datTT('Du hành: ' + (loiNhan || 'chưa đi được') + ' — thử điểm kế sau 20 giây');
+           clearTimeout(henNoiNen); henNoiNen = null; henChang = setTimeout(diChang, 20000); }   // một điểm hỏng thì thử điểm kế
+    return;
+  }
+  if(nen === 'le-tan'){
+    if(tt === 'toi-noi') datTT('Lễ tân — đang đứng tại điểm ' + ((D.le_tan || {}).diem || 'Le tan'));
+    else { dungTaiCho = true; datTT('Lễ tân — đứng tại chỗ (' + (loiNhan || 'không tới được điểm lễ tân') + ')'); }
+    henNoi(1500);
+  }
+};
+function henNoi(ms){ clearTimeout(henNoiNen); henNoiNen = setTimeout(noiNen, Math.max(ms, khongNoiTruoc - Date.now())); }
+function noiNen(){
+  henNoiNen = null;
+  if(manDang !== 'mh-cho' || nen === 'cho') return;
+  var k = nen === 'du-hanh' ? (D.du_hanh || {}) : (D.le_tan || {});
+  var ds = k.cau || [];
+  if(!ds.length) return;
+  /* Du hành: chỉ nói khi đang đi thật. Lễ tân: nói khi đã đứng yên (tới nơi, hoặc đứng tại chỗ). */
+  var duocNoi = nen === 'du-hanh' ? (!coCau() || (dangDi && !loiChang)) : !dangDi;
+  if(!duocNoi){ if(nen === 'le-tan') henNoi(2000); return; }
+  var cau = ds[lanNoiNen++ % ds.length];
+  lucNoiCuoi = Date.now();
+  if(coCau()) try{ CAU.doc(chuDoc(cau)); }catch(e){}
+  henNoi((k.nghi_giay || 22) * 1000 + chuDoc(cau).length / TOC_DO_DOC * 1000);
+}
+
+/* ══════════════════ BIỂU CẢM — bộ đổi mặt hai lớp (chép từ app Tây Hòa) ══════════════════
+   ⚠ Tên tệp khớp TỪNG KÝ TỰ với bieu-cam/. Clip phải là H.264 — WebView không giải HEVC.
+   Hai lớp: clip mới phát ngầm ở lớp dưới, PHÁT RỒI mới hiện lên — đổi src trên một thẻ là lộ
+   nút ▶ xám của WebView giữa hai clip. */
+var ANH_BIA_TRONG = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+function taoBoDoiMat(v1, v2){
+  var tren = v1, duoi = v2, dang = '';
+  [v1, v2].forEach(function(v){ v.poster = ANH_BIA_TRONG; v.onerror = function(){}; });
+  return function(src){
+    if(!src) return;
+    if(src === dang){ try{ tren.currentTime = 0; var r = tren.play(); if(r && r.catch) r.catch(function(){}); }catch(e){} return; }
+    dang = src;
+    if(!tren.getAttribute('src')){
+      tren.classList.remove('an'); duoi.classList.add('an');
+      tren.src = src; var p = tren.play(); if(p && p.catch) p.catch(function(){});
+      return;
+    }
+    var moi = duoi, cu = tren;
+    moi.onplaying = function(){
+      moi.onplaying = null;
+      setTimeout(function(){
+        moi.style.zIndex = 2; cu.style.zIndex = 1;
+        moi.classList.remove('an');
+        tren = moi; duoi = cu;
+        setTimeout(function(){ cu.classList.add('an'); cu.pause(); }, 300);
+      }, 60);
+    };
+    moi.src = src;
+    try{ moi.currentTime = 0; }catch(e){}
+    var q = moi.play(); if(q && q.catch) q.catch(function(){});
+  };
+}
+var CLIP_CHO = ['bieu-cam/emoji_blink.mp4', 'bieu-cam/emoji_happy.mp4', 'bieu-cam/emoji_wink_1.mp4', 'bieu-cam/emoji_blink.mp4',
+                'bieu-cam/emoji_laugh.mp4', 'bieu-cam/emoji_wink_2.mp4'];
+var CLIP_AI = ['bieu-cam/emoji_happy.mp4', 'bieu-cam/emoji_blink.mp4', 'bieu-cam/emoji_wink_1.mp4', 'bieu-cam/emoji_laugh.mp4'];
+function chayBieuCam(idA, idB, ds){
+  var a = $(idA), b = $(idB); if(!a || !b) return;
+  var i = 0, doi = taoBoDoiMat(a, b);
+  var ke = function(){ doi(ds[i++ % ds.length]); };
+  a.onended = ke; b.onended = ke;
+  ke();
+}
+
+/* ─────────── NHẢY MÚA — khớp phách nhạc (chép nguyên lối app Tây Hòa 24/09/2026) ───────────
+   Nhạc nhac/mua.mp3. Bảng phách VU_DAO do tools/do-nhip-nhac.py ĐO từ chính tệp nhạc —
+   ĐỪNG sửa tay; đổi bài là chạy lại script. Lớp web giữ nhịp theo audio.currentTime,
+   Kotlin (NhayMua.kt) chỉ thi hành từng động tác.
+   THÂN ở phách 1·3, ĐẦU ở phách 2·4 — mỗi lệnh xoay mất tối thiểu ~0,6 giây (đo trên
+   Nova). Mọi ô nhịp ĐỐI XỨNG (tổng góc = 0) để robot đứng lại đúng hướng.
+   Chép nguyên từ app Cao Xanh Minibot (01/10/2026).
+   ⚠ Minibot CHƯA ĐO: đầu Minibot có gật được không, lệnh xoay mất bao lâu. Lệnh bị máy
+     từ chối thì NhayMua.kt đếm và ghi log — buổi máy thật đầu tiên phải xem số đó. */
+/*__BAT_DAU_VU_DAO__*/
+var VU_DAO = {"tep":"mua.mp3","dai":34.978,"bpm":129.2,"pha":0,"p":[[0.07,1,0.013],[0.534,0,0.013],[0.998,0,0.062],[1.463,0,0.092],[1.881,1,0.1],[2.345,0,0.194],[2.81,0,0.171],[3.274,0,0.208],[3.738,1,0.325],[4.203,0,0.231],[4.667,0,0.205],[5.132,0,0.312],[5.619,1,0.358],[6.06,0,0.576],[6.525,0,0.767],[6.989,0,0.829],[7.454,1,0.835],[7.918,0,0.701],[8.382,0,0.661],[8.847,0,0.663],[9.311,1,0.655],[9.776,0,0.663],[10.24,0,0.665],[10.704,0,0.665],[11.146,1,0.693],[11.61,0,0.665],[12.074,0,0.644],[12.539,0,0.633],[13.003,1,0.62],[13.468,0,0.666],[13.932,0,0.704],[14.396,0,0.715],[14.838,1,0.725],[15.302,0,0.706],[15.766,0,0.579],[16.231,0,0.532],[16.695,1,0.525],[17.16,0,0.548],[17.624,0,0.663],[18.088,0,0.687],[18.53,1,0.546],[18.994,0,0.434],[19.458,0,0.275],[19.923,0,0.257],[20.387,1,0.375],[20.852,0,0.531],[21.316,0,0.683],[21.78,0,0.711],[22.245,1,0.716],[22.686,0,0.649],[23.15,0,0.587],[23.615,0,0.537],[24.079,1,0.549],[24.543,0,0.578],[25.008,0,0.664],[25.472,0,0.727],[25.913,1,0.751],[26.378,0,0.757],[26.842,0,0.732],[27.307,0,0.714],[27.771,1,0.693],[28.235,0,0.725],[28.7,0,0.709],[29.141,0,0.713],[29.582,1,0.734],[30.023,0,0.689],[30.534,0,0.662],[30.999,0,0.637],[31.463,1,0.611],[31.927,0,0.654],[32.392,0,0.722],[32.856,0,0.761],[33.297,1,0.653],[33.762,0,0.501],[34.226,0,0.324],[34.691,0,0.074]]};
+/*__HET_VU_DAO__*/
+var DI_TRUOC_GIAY = 0.06, BO_PHACH_CU_GIAY = 0.25;
+var MAT_THEO_MUC = [
+  ['bieu-cam/emoji_blink.mp4', 'bieu-cam/emoji_happy.mp4'],
+  ['bieu-cam/emoji_happy.mp4', 'bieu-cam/emoji_wink_1.mp4'],
+  ['bieu-cam/emoji_laugh.mp4', 'bieu-cam/emoji_wink_2.mp4', 'bieu-cam/emoji_laugh.mp4', 'bieu-cam/emoji_wink_3.mp4']
+];
+var dangNhay = false, vongNhay = null, phachKe = 0, mucO = 0, gocO = 10, t0Nhay = 0, henNhun = null, doiMatMua = null;
+function vaoManMua(){
+  doiMatSang('bieu-cam/emoji_happy.mp4');
+  var a = $('#nhac-mua');
+  if(a && !a.getAttribute('src')) a.src = 'nhac/mua.mp3';
+  $('#mua-dang').hidden = true;
+  $('#mua-chuan-bi').hidden = false;
+  ve('mh-mua');
+}
+function doiMatSang(src){
+  if(!doiMatMua) doiMatMua = taoBoDoiMat($('#clip-mua'), $('#clip-mua-2'));
+  doiMatMua(src);
+}
+function mucNangLuong(nl){ return nl < 0.35 ? 0 : nl < 0.65 ? 1 : 2; }
+function dongTacCuaPhach(i){
+  var p = VU_DAO.p[i];
+  var k = ((i - VU_DAO.pha) % 4 + 4) % 4, o = Math.floor((i - VU_DAO.pha) / 4);
+  if(i < VU_DAO.pha) return [];
+  if(k === 0){
+    mucO = mucNangLuong(p[2]);
+    gocO = mucO === 2 ? 10 : 7;
+    var ds = MAT_THEO_MUC[mucO];
+    doiMatSang(ds[o % ds.length]);
+  }
+  var L = 'L' + gocO, R = 'R' + gocO;
+  if(mucO === 0) return [[], ['U'], [], ['D']][k];
+  if(mucO === 1) return [[L], [], [R], []][k];
+  return [[L], ['U'], [R], ['D']][k];
+}
+function nhun(manh){
+  var o = $('#lop-mat'); if(!o) return;
+  o.classList.remove('nhun', 'nhun-nhe');
+  void o.offsetWidth;
+  o.classList.add(manh ? 'nhun' : 'nhun-nhe');
+  clearTimeout(henNhun);
+  henNhun = setTimeout(function(){ o.classList.remove('nhun', 'nhun-nhe'); }, 120);
+}
+function gioNhay(){
+  var a = $('#nhac-mua');
+  if(a && !a.paused && a.currentTime > 0) return a.currentTime;
+  return (Date.now() - t0Nhay) / 1000;
+}
+function batDauNhay(){
+  thaoTac();
+  var a = $('#nhac-mua');
+  try{ a.currentTime = 0; a.volume = 1; var p = a.play(); if(p && p.catch) p.catch(function(){}); }catch(e){}
+  dangNhay = true; phachKe = 0; mucO = 0; t0Nhay = Date.now();
+  /* Huỷ hẹn về màn chờ đã đặt lúc VÀO màn nhảy — henVeCho bỏ qua khi đang nhảy nhưng không tự huỷ hẹn cũ,
+     nên bài 35 giây bị cắt ngang ở giây 60 tính từ lúc vào màn (bộ thử bắt được 01/10/2026). */
+  clearTimeout(henVe);
+  $('#mua-chuan-bi').hidden = true;
+  $('#mua-dang').hidden = false;
+  if(coCau() && CAU.batNhay) try{ CAU.batNhay(Math.ceil(VU_DAO.dai)); }catch(e){}
+  clearInterval(vongNhay);
+  vongNhay = setInterval(nhipNhay, 10);
+}
+function nhipNhay(){
+  if(!dangNhay) return;
+  var t = gioNhay();
+  while(phachKe < VU_DAO.p.length && VU_DAO.p[phachKe][0] - DI_TRUOC_GIAY <= t){
+    var i = phachKe++;
+    var ds = dongTacCuaPhach(i);
+    if(t - VU_DAO.p[i][0] > BO_PHACH_CU_GIAY) continue;
+    if(coCau() && CAU.dongTac) ds.forEach(function(ma){ try{ CAU.dongTac(ma); }catch(e){} });
+    nhun(VU_DAO.p[i][1]);
+  }
+  var a = $('#nhac-mua');
+  if(t >= VU_DAO.dai + 0.2 || (a && a.ended)) dungNhay(true, false);
+}
+function dungNhay(het, batLai){
+  if(!dangNhay) return;
+  dangNhay = false;
+  clearInterval(vongNhay);
+  try{ $('#nhac-mua').pause(); }catch(e){}
+  if(coCau() && CAU.dungNhay) try{ CAU.dungNhay(!!batLai); }catch(e){}
+  $('#mua-dang').hidden = true;
+  $('#mua-chuan-bi').hidden = false;
+  if(het) doc(L.cam_on_nhay);
+  henVeCho();
+}
+
+/* ══════════════ MÀN KỸ THUẬT — bấm GIỮ logo Gelsectan ở màn chính 1,2 giây ══════════════
+   Robot đứng ở quầy, không cắm cáp được mỗi lần. Chụp một tấm màn này gửi về là biết: máy có
+   AgentOS không · AI thông chưa · micro · mạng · bản đồ có đủ điểm không · Google Sheets gửi được chưa. */
+var ktBanDo = '', ktSheet = '';
+function moManKyThuat(){
+  var ai = {}, kh = {};
+  if(coCau() && CAU.thongTinAI) try{ ai = JSON.parse(CAU.thongTinAI()); }catch(e){}
+  if(coCau() && CAU.thongTinKhach) try{ kh = JSON.parse(CAU.thongTinKhach()); }catch(e){}
+  var dong = [
+    ['Chế độ AI', ({ 'agentos':'AgentOS + kiến thức Robot Portal (câu trong bộ câu hỏi: app đọc nguyên văn)',
+                     'du-phong':'DỰ PHÒNG — máy chưa có AgentOS: mic qua tai RobotOS đời cũ + bộ câu hỏi trong máy + hỏi đám mây bằng chữ',
+                     'khong':'Không có AI', 'dang-do':'Đang dò…' })[ai.cheDo || cheDoAI] || (ai.cheDo || cheDoAI)],
+    ['Gói AgentOS trên máy', ai.coAgentOS === undefined ? '—' : (ai.coAgentOS ? 'CÓ (com.ainirobot.agentservice)' : 'KHÔNG — muốn AI trả lời câu ngoài bộ câu hỏi phải xin OrionStar cài AgentOS cho máy này')],
+    ['appId', ai.appId || '—'],
+    ['AI đã trả lời thật', ai.agentSanSang ? 'Rồi' : 'Chưa' + (ai.loiAI ? ' — ' + ai.loiAI : '')],
+    ['Micro của máy (Settings.Global)', ai.micHeThong === 1 ? 'Bật' : ai.micHeThong === 0 ? 'TẮT — chạy: adb shell settings put global microphone 1' : '—'],
+    ['Tai RobotOS đời cũ (máy không AgentOS)', ai.taiCu || '—'],
+    ['Mạng', ai.mang || '—'],
+    ['Lần cuối nghe được chữ', ai.ngheCuoiGiay >= 0 ? ai.ngheCuoiGiay + ' giây trước' : 'chưa'],
+    ['Đám mây OrionStar (dự phòng)', ai.duPhong || '—'],
+    ['Robot', coCau() ? (ai.robot || '—') : 'bản máy tính'],
+    ['Giọng đọc', ai.giong || '—'],
+    ['Chế độ nền', nen],
+    ['Bản đồ', ktBanDo || 'bấm “Kiểm tra bản đồ”'],
+    ['Khách đã để lại thông tin', kh.soKhach === undefined ? '—' : kh.soKhach + ' người · lưu ở ' + (kh.thuMuc || '')],
+    ['Google Sheets', kh.sheet === undefined ? '—' : kh.sheet + (kh.choGui ? ' · còn ' + kh.choGui + ' dòng chờ gửi' : '') + (kh.loiCuoi ? ' · lỗi gần nhất: ' + kh.loiCuoi : '')],
+    ['Gửi thử Google Sheets', ktSheet || 'chưa thử'],
+    ['Khung giao diện · dữ liệu', ai.nguonNoiDung || '—'],
+    ['Dữ liệu', CAU_HOI.length + ' câu hỏi · cập nhật ' + (D.cap_nhat || '—')],
+    ['Khung màn hình', innerWidth + '×' + innerHeight + ' CSS px · dpr ' + (window.devicePixelRatio || 1)],
+    ['WebView', navigator.userAgent.replace(/.*Chrome\/([\d.]+).*/, 'Chrome $1')]
+  ];
+  $('#kt-noi-dung').innerHTML = '<table class="bang"><tr><th>Mục</th><th>Tình trạng</th></tr>' +
+    dong.map(function(d){ return '<tr><td>' + thoat(d[0]) + '</td><td>' + thoat(d[1]) + '</td></tr>'; }).join('') + '</table>';
+  $('#phu-kt').classList.add('hien');
+}
+function dongKT(){ $('#phu-kt').classList.remove('hien'); }
+function kiemBanDo(){
+  if(!coCau()){ ktBanDo = 'bản máy tính — không hỏi được robot'; moManKyThuat(); return; }
+  ktBanDo = 'đang hỏi robot…'; moManKyThuat();
+  var can = ((D.du_hanh || {}).diem || []).concat([(D.le_tan || {}).diem || 'Le tan']);
+  try{ CAU.kiemTraBanDo(JSON.stringify(can)); }catch(e){}
+}
+window.baoTinhTrangBanDo = function(json){
+  var o = {}; try{ o = JSON.parse(json); }catch(e){}
+  var can = ((D.du_hanh || {}).diem || []).concat([(D.le_tan || {}).diem || 'Le tan']);
+  var co = o.khop || {};
+  ktBanDo = (o.daDinhVi ? 'ĐÃ định vị' : 'CHƯA định vị') + ' · ' +
+    can.map(function(d){ return d + (co[d] ? ' ✓ (' + co[d] + ')' : ' ✗ THIẾU'); }).join(' · ') +
+    ' · trên bản đồ có: ' + ((o.tatCa || []).join(', ') || 'không đọc được');
+  if($('#phu-kt').classList.contains('hien')) moManKyThuat();
+};
+/* Đọc thử: tên sản phẩm, rồi câu thành phần (nhiều tên riêng nhất). Hai câu RIÊNG — mỗi câu có sẵn MP3 giọng Yuna;
+   ghép thành một chuỗi mới là không có tệp nào khớp, robot rơi về giọng máy. */
+function docThuTen(){
+  thaoTac();
+  setTimeout(function(){ doc(D.ten_doc); }, 300);
+  setTimeout(function(){ doc(THEO_ID['0.2'] || ''); }, 2600);
+}
+function guiThuSheet(){
+  if(!coCau() || !CAU.guiThuSheet){ ktSheet = 'bản máy tính — không gửi được'; moManKyThuat(); return; }
+  ktSheet = 'đang gửi…'; moManKyThuat();
+  try{ CAU.guiThuSheet(); }catch(e){}
+}
+window.baoGuiThuSheet = function(chu){ ktSheet = chu; if($('#phu-kt').classList.contains('hien')) moManKyThuat(); };
+(function(){
+  var o = $('#logo-giua'); if(!o) return;
+  var hen = null;
+  function dat(){ clearTimeout(hen); hen = setTimeout(moManKyThuat, 1200); }
+  o.addEventListener('touchstart', dat); o.addEventListener('mousedown', dat);
+  ['touchend', 'touchcancel', 'mouseup', 'mouseleave'].forEach(function(e){ o.addEventListener(e, function(){ clearTimeout(hen); }); });
+})();
+
+/* ─────────── Khởi động ─────────── */
+(function(){
+  $('#chinh-phu').textContent = 'Anh chị muốn tìm hiểu theo cách nào?';
+  $$('[data-hinh]').forEach(function(o){ o.innerHTML = icon(o.getAttribute('data-hinh'), 4.6); });
+  veDanhSach();
+  chayBieuCam('#clip-cho', '#clip-cho-2', CLIP_CHO);
+  chayBieuCam('#clip-ai', '#clip-ai-2', CLIP_AI);
+  datTrangThai('nghi');
+  console.log('KHUNG ' + innerWidth + 'x' + innerHeight + ' dpr ' + (window.devicePixelRatio || 1) + ' · ' + CAU_HOI.length + ' câu hỏi');
+})();
+</script>
+</body>
+</html>

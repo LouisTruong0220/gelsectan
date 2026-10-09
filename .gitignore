@@ -1,0 +1,38 @@
+# ── Thứ Gradle tự sinh ra, không đẩy lên kho ──
+# 36 MB và dựng lại được bằng một lệnh build. Đẩy lên chỉ tổ làm kho nặng
+# và gây xung đột mỗi lần hai máy cùng build.
+android/build/
+android/app/build/
+android/.gradle/
+android/.idea/
+android/.cxx/
+*.iml
+
+# Đường dẫn Android SDK riêng của từng máy — build-apk.ps1 tự ghi lại mỗi lần chạy.
+# Đẩy lên là máy người khác build hỏng vì trỏ vào ổ đĩa không tồn tại.
+android/local.properties
+
+# Ảnh chụp màn hình do bộ kiểm tự sinh (node tools/soi-man-hinh.mjs).
+# Chạy lại là có, không cần lưu.
+demo/anh-soi/
+
+# Sổ khách + nhật ký câu hỏi kéo từ robot về (tools/day-web.py --lay-ve).
+# ⚠ DỮ LIỆU CÁ NHÂN của khách tham dự sự kiện (họ tên, số điện thoại) — TUYỆT ĐỐI không đẩy lên kho.
+du-lieu/tu-robot/
+nhat-ky/
+*.tsv
+
+# Rác hệ điều hành
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Thư mục Python tự sinh khi chạy script — không phải mã nguồn.
+__pycache__/
+*.pyc
+
+# Log build — chạy lại là có
+build-log.txt
+
+# Bản sao lưu local.properties — đường dẫn SDK riêng của máy
+*.bak
